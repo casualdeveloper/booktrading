@@ -7,12 +7,16 @@ const session = require("express-session");
 const mongoose = require("mongoose");
 const setupPassport = require("./setuppassport");
 const helmet = require("helmet");
+const compression = require("compression");
+
 
 const routes = require("./routes");
 
 mongoose.connect("mongodb://localhost:27017/booktrading");
 
 app.set("port", process.env.PORT || 8080);
+
+app.use(compression());
 
 app.use(express.static("public"));
 

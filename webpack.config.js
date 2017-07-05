@@ -1,8 +1,8 @@
-const path                                  = require("path");
-const ExtractTextPlugin                     = require("extract-text-webpack-plugin");
-const webpack                               = require("webpack");
-const ManifestPlugin                        = require("webpack-manifest-plugin");
-const CleanWebpackPlugin                    = require("clean-webpack-plugin");
+const path                 = require("path");
+const ExtractTextPlugin    = require("extract-text-webpack-plugin");
+const webpack              = require("webpack");
+const ManifestPlugin       = require("webpack-manifest-plugin");
+const CleanWebpackPlugin   = require("clean-webpack-plugin");
 
 
 const PATHS = {

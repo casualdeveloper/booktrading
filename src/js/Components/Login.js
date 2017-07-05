@@ -1,10 +1,10 @@
 import React from "react";
 
-export default class Index extends React.Component{
+export default class Login extends React.Component{
     render(){
         return(
             <div>
-                <h1>HELLO WORLD</h1>
+                <h1>Login</h1>
             </div>
         );
     }
