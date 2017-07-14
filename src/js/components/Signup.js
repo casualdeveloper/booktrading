@@ -3,17 +3,18 @@ import { Button, Checkbox, Form, Grid, Segment, Icon, Header, Message } from "se
 import { Link, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { userLogin } from "../actions";
+import { userSignup } from "../actions";
 
-class Login extends React.Component {
-    constructor(props){
+class Signup extends React.Component{
+        constructor(props){
         super(props);
         this.state = {
             username:"",
-            password:""
+            password:"",
+            email:""
         }
 
-        this.login = this.login.bind(this);
+        this.signup = this.signup.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
     }
 
@@ -21,15 +22,9 @@ class Login extends React.Component {
         this.setState({[e.target.name]: e.target.value});
     }
 
-    login(e) {
+    signup(e) {
         e.preventDefault();
-        
-        const user = {
-            username: this.state.username,
-            password: this.state.password
-        }
-
-        this.props.userLogin(user);
+        this.props.userSignup(this.state);
   }
 
     render(){
@@ -41,24 +36,25 @@ class Login extends React.Component {
 
         return(
             <div>
-                <Grid centered verticalAlign="middle" relaxed>
+            <Grid centered verticalAlign="middle" relaxed>
                     <Grid.Column mobile={16} computer={8} tablet={10}>
-                        <Header as="h2" color="teal">Log-in to your account</Header>
+                        <Header as="h2" color="teal">Create a new account</Header>
                         <Segment stacked>
-                            <Form onSubmit={ this.login } loading={(this.props.loading)?true:false} error={this.props.error?true:false}>
+                            <Form onSubmit={this.signup} loading={(this.props.loading)?true:false} error={this.props.error?true:false}>
                                 <Message
                                     error
-                                    header="Failed login attempt"
+                                    header="Failed Signup attempt"
                                     content={this.props.error}
                                 />
+                                <Form.Input name="email" icon="mail" iconPosition="left" type="text" placeholder="E-mail address" onChange={this.handleInputChange} />
                                 <Form.Input name="username" icon="user" iconPosition="left" type="text" placeholder="Username" onChange={this.handleInputChange} />
                                 <Form.Input name="password" icon="lock" iconPosition="left" type="password" placeholder="Password" onChange={this.handleInputChange} />
                                 <Form.Button color="teal" fluid>Submit</Form.Button>
                             </Form>
                         </Segment>
                         <Message>
-                            Don't have an account?
-                            <Link to="/signup"> Sign up</Link>
+                            Already have an account
+                            <Link to="/login"> Log in</Link>
                         </Message>
                     </Grid.Column>
                 </Grid>
@@ -70,13 +66,14 @@ class Login extends React.Component {
 function mapStateToProps(state){
     return {
         user: state.user,
-        loading: state.userLoginLoading,
-        error: state.userLoginError
+        loading: state.userSignupLoading,
+        error: state.userSignupError
     }
 }
 
 function mapDispatchToProps(dispatch){
-    return bindActionCreators({userLogin: userLogin}, dispatch);
+    return bindActionCreators({userSignup: userSignup}, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Signup);

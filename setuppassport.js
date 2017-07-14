@@ -1,37 +1,41 @@
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
+const config = require("./config");
+const JwtStrategy = require("passport-jwt").Strategy;
+const ExtractJwt = require("passport-jwt").ExtractJwt;
 
 const User = require("./models/user");
-module.exports = function() {
-    passport.serializeUser(function(user, done) {
-        done(null, user._id);
-    });
-    passport.deserializeUser(function(id, done) {
-        User.findById(id, function(err, user) {
-            done(err, user);
-        });
-    });
+
+const jwtOptions = {  
+    jwtFromRequest: ExtractJwt.fromAuthHeader(),
+    secretOrKey: config.JWT_SECRET
 };
 
-passport.use("login", new LocalStrategy(
-    function(username, password, done) {
-        User.findOne({ username: username }, function(err, user) {
-            if (err) {
-                 return done(err);
-            }
-            if (!user) {
-                return done(null, false,{ message: "No user has that username!" });
-            }
-            user.checkPassword(password, function(err, isMatch) {
-                if (err) {
-                     return done(err); 
-                }
-                if (isMatch) {
-                    return done(null, user);
-                } else {
-                    return done(null, false,{ message: "Invalid password." });
-                }
-            });
+const localLogin = new LocalStrategy(function(username, password, done) {  
+    User.findOne({ username: username }, function(err, user) {
+        if(err) { return done(err); }
+        if(!user) { return done(null, false, { error: "Your login details could not be verified. Please try again." }); }
+
+        user.checkPassword(password, function(err, isMatch) {
+            if (err) { return done(err); }
+            if (!isMatch) { return done(null, false, { error: "Your login details could not be verified. Please try again." }); }
+
+            return done(null, user);
         });
-    }
-));
+    });
+});
+
+const jwtLogin = new JwtStrategy(jwtOptions, function(payload, done) {  
+    User.findById(payload._id, function(err, user) {
+        if (err) { return done(err, false); }
+
+        if (user) {
+            done(null, user);
+        } else {
+            done(null, false);
+        }
+    });
+});
+passport.use(jwtLogin); 
+passport.use(localLogin);
+

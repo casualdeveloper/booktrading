@@ -6,9 +6,11 @@ const SALT_FACTOR = 10;
 const userSchema = mongoose.Schema({
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    createdAt: { type: Date, default: Date.now },
-    displayName: String,
-    bio: String
+    email: {type: String, required: true, unique: true},
+    profile: {
+        firstName: { type: String },
+        lastName: { type: String }
+    },
 });
 
 userSchema.methods.name = function() {
@@ -16,7 +18,7 @@ userSchema.methods.name = function() {
 };
 
 const noop = function() {};
-    userSchema.pre("save", function(done) {
+userSchema.pre("save", function(done) {
     const user = this;
     if (!user.isModified("password")) {
         return done();

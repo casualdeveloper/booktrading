@@ -1,8 +1,11 @@
-const path                 = require("path");
-const ExtractTextPlugin    = require("extract-text-webpack-plugin");
-const webpack              = require("webpack");
-const ManifestPlugin       = require("webpack-manifest-plugin");
-const CleanWebpackPlugin   = require("clean-webpack-plugin");
+const path                      = require("path");
+const ExtractTextPlugin         = require("extract-text-webpack-plugin");
+const webpack                   = require("webpack");
+const ManifestPlugin            = require("webpack-manifest-plugin");
+const CleanWebpackPlugin        = require("clean-webpack-plugin");
+const OptimizeCSSAssetsPlugin   = require("optimize-css-assets-webpack-plugin");
+const cssnano                   = require("cssnano");
+const BundleAnalyzerPlugin      = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 
 
 const PATHS = {
@@ -22,6 +25,17 @@ const autoprefix = function() {
     };
 };
 
+const cssLoader = function() {
+    return {
+        loader: "css-loader",
+        options:{
+            url: true,
+            importLoaders: 1,
+            modules: true,
+        }
+    }
+}
+
 module.exports = {
     entry: {
         app:PATHS.app,
@@ -35,9 +49,9 @@ module.exports = {
         rules: [
             {
                 test: /\.css$/,
-                include: PATHS.style,
+                //include: PATHS.style,
                 use: ExtractTextPlugin.extract({
-                    use: ["css-loader", autoprefix()],
+                    use: [cssLoader(), autoprefix()],
                     fallback: "style-loader",
                 }),
             },
@@ -45,7 +59,7 @@ module.exports = {
                 test: /\.scss$/,
                 include: PATHS.style,
                 use: ExtractTextPlugin.extract({
-                    use: ["css-loader", autoprefix(), "sass-loader"],
+                    use: [cssLoader(), autoprefix(), "sass-loader"],
                     fallback: "style-loader",
                 }),
             },
@@ -53,9 +67,17 @@ module.exports = {
                 test: /(\.js|.jsx)$/,
                 loader: "babel-loader",
                 options: {
-                    presets: ["react","es2015"]
-            }
-        }]
+                    presets: ["es2015","react"]
+                },
+            },
+            {
+                test: /\.(png|svg|ttf|eot|woff|woff2)$/,
+                loader: "file-loader",
+                options: {
+                    name: '[name].[ext]',
+                },
+            },
+        ]
     },
     resolve:{
         alias: {
@@ -77,7 +99,30 @@ module.exports = {
                 resource.match(/\.js$/)
             ),
         }),
-        new webpack.optimize.UglifyJsPlugin(), 
-        new ManifestPlugin()
+        new OptimizeCSSAssetsPlugin({
+            cssProcessor: cssnano,
+            cssProcessorOptions: {
+                discardComments: {
+                    removeAll: true,
+                },
+                // Run cssnano in safe mode to avoid
+                // potentially unsafe transformations.
+                safe: true,
+            },
+            canPrint: false,
+        }),
+        new webpack.optimize.UglifyJsPlugin({
+            compress: {
+                unused: true,
+                dead_code: true,
+                warnings: false,
+            },
+        }),
+        new webpack.LoaderOptionsPlugin({
+            minimize: true,
+            debug: false,
+        }), 
+        new ManifestPlugin(),
+        //new BundleAnalyzerPlugin()
     ]
 };
