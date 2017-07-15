@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Link, withRouter  } from "react-router-dom";
-import { Menu, Container } from "semantic-ui-react";
+import { Menu, Container, Dimmer, Loader } from "semantic-ui-react";
 import { connect } from "react-redux";
 import {bindActionCreators} from "redux";
 
@@ -8,11 +8,12 @@ import Home from "./components/Home";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 
-import { userLogout } from "./actions";
+import { userLogout, userLocalLogin } from "./actions";
 
 class App extends React.Component {
     constructor(props){
         super(props);
+        this.props.userLocalLogin();
     }
 
     render(){
@@ -35,28 +36,35 @@ class App extends React.Component {
 
 
         return(
-                <Container>
-                    <Menu text color="teal" size="massive" fluid>
-                        <Menu.Item as={Link} to="/" content="Home" active={pathname === "/"} />
-                        {userExists?UserProfileSubmenu:LoginSubmenu}
-                    </Menu>
-                    <Route exact path="/" component={Home}/>
-                    <Route path="/login" component={Login} />
-                    <Route path ="/signup" component={Signup} />
-                    
-                </Container>
+            <Container>
+                <Dimmer active={this.props.userLoading} page>
+                    <Loader>Loading</Loader>
+                </Dimmer> 
+                <Menu text color="teal" size="massive" fluid>
+                    <Menu.Item as={Link} to="/" content="Home" active={pathname === "/"} />
+                    {userExists?UserProfileSubmenu:LoginSubmenu}
+                </Menu>
+                <Route exact path="/" component={Home}/>
+                <Route path="/login" component={Login} />
+                <Route path ="/signup" component={Signup} />
+                   
+            </Container>
         );
    }
 }
 
 function mapStateToProps(state){
     return {
-        user: state.user
+        user: state.user,
+        userLoading: state.userFetchingData
     }
 }
 
 function mapDispatchToProps(dispatch){
-    return bindActionCreators({userLogout: userLogout}, dispatch);
+    return bindActionCreators({
+        userLogout: userLogout,
+        userLocalLogin: userLocalLogin
+    }, dispatch);
 }
 
 export default withRouter(connect(mapStateToProps,mapDispatchToProps)(App));

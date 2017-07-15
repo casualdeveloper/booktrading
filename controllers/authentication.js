@@ -2,6 +2,8 @@ const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const User = require("../models/user");
 const config = require("../config");
+const passportService = require("../setuppassport");
+const passport = require("passport");
 
 function generateToken(user) {  
     return jwt.sign(user, config.JWT_SECRET, {
@@ -9,13 +11,13 @@ function generateToken(user) {
     });
 }
 
-function setUserInfo(request) {  
+function setUserInfo(user) {  
     return {
-        _id: request._id,
-        firstName: request.profile.firstName,
-        lastName: request.profile.lastName,
-        email: request.email,
-        username: request.username
+        _id: user._id,
+        firstName: user.profile.firstName,
+        lastName: user.profile.lastName,
+        email: user.email,
+        username: user.username
     }
 };
 
@@ -97,7 +99,7 @@ exports.register = function(req, res, next) {
 // Authorization Middleware
 //========================================
 
-exports.authorization = function(role) {  
+exports.authorization = function() {  
     return function(req, res, next) {
         const user = req.user;
 
@@ -110,4 +112,29 @@ exports.authorization = function(role) {
             return next();            
         })
     }
+}
+
+//========================================
+// JWTtoUser Middleware
+//========================================
+
+exports.extractUser = function(req,res,next){
+    passport.authenticate("jwt", function(err,user){
+        if(err) { return next(err) }
+        if(!user) { return res.status(401) }
+        user = setUserInfo(user);
+        return res.status(200).send(user);
+    })(req);
+}
+
+//========================================
+// LocalLogin Middleware
+//========================================
+exports.localLogin = function(req,res,next){
+    passport.authenticate("local", function(err, user, message){
+        if(err) { return next(err) }
+        if(!user) { return res.status(422).send(message) }
+        req.user = user;
+        return next();
+    })(req, res, next);
 }
