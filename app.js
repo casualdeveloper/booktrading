@@ -9,7 +9,8 @@ const config = require("./config");
 
 const routes = require("./routes");
 
-mongoose.connect(config.DB);
+const mongooseOptions = { promiseLibrary: global.Promise };
+mongoose.connect(config.DB, mongooseOptions);
 
 app.set("port", process.env.PORT || 8080);
 
@@ -30,6 +31,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());  
 
 app.use(routes);
+
+app.use(function(err, req, res, next) {
+    res.status(err.status || 500);
+    res.json({"error": {
+        message: err.message,
+    }});
+});
 
 app.listen(app.get("port"), err => {
     if(err){

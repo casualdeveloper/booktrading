@@ -13,9 +13,11 @@ function generateToken(user) {
 
 function setUserInfo(user) {  
     return {
-        _id: user._id,
         firstName: user.profile.firstName,
         lastName: user.profile.lastName,
+        country: user.profile.country,
+        state: user.profile.state,
+        city: user.profile.city,
         email: user.email,
         username: user.username
     }
@@ -25,14 +27,45 @@ function setUserInfo(user) {
 // Login Route
 //========================================
 exports.login = function(req, res, next) {
+    if(!req.user) return next();
 
-    let userInfo = setUserInfo(req.user);
+    let userId = req.user.id;
+    let userInfo;
 
-    res.status(200).json({
-        token: "JWT " + generateToken(userInfo),
-        user: userInfo
+    User.findById(userId, function(err, foundUser){
+        if(err) { return next(err) }
+        userInfo = setUserInfo(foundUser)
+        res.status(200).json({
+            token: "JWT " + generateToken({id: userId}),
+            user: userInfo
+        });
     });
+
+    
 }
+
+//========================================
+// Login without generating new JWT route
+//========================================
+exports.loginNoJWT = function(req, res, next) {
+    if(!req.user) return next();
+    let userId = req.user.id;
+
+    let userInfo;
+
+
+    User.findById(userId, function(err, foundUser){
+        if(err) { return next(err) }
+        userInfo = setUserInfo(foundUser)
+
+        res.status(200).json({
+            user: userInfo
+        });
+    });
+
+    
+}
+
 
 
 //========================================
@@ -63,8 +96,6 @@ exports.register = function(req, res, next) {
         if (err) { return next(err); }
 
         // If user is not unique, return errors
-
-
         if (existingUser && existingUser.email === email) {
             return res.status(422).send({ error: "Email address is already in use." });
         }
@@ -84,46 +115,49 @@ exports.register = function(req, res, next) {
         user.save(function(err, user) {
             if (err) { return next(err); }
 
-            // Respond with JWT if user was created
-            let userInfo = setUserInfo(user);
-
-            res.status(201).json({
-                token: "JWT " + generateToken(userInfo),
-                user: userInfo
-            });
+            // Login user if user was created
+            req.user.id = user.id;
+            login(req,res,next);
         });
     });
 }
 
+
 //========================================
-// Authorization Middleware
+// JWT Authentication Middleware
 //========================================
 
-exports.authorization = function() {  
-    return function(req, res, next) {
-        const user = req.user;
-
-        User.findById(user._id, function(err, foundUser) {
-            if (err) {
-                res.status(422).json({ error: "No user was found." });
-                return next(err);
-            }
-
-            return next();            
-        })
-    }
+exports.JWTLogin = function(req,res,next){
+    passport.authenticate("jwt", function(err,user,info){
+        if(err || info) {
+            //if(!err)
+            //    return next(info);
+            return next(err);
+        }
+        if(!user) { return res.status(401) }
+        req.user = user;
+        return next();
+    })(req);
 }
 
 //========================================
-// JWTtoUser Middleware
+// JWT Verification Middleware
 //========================================
 
-exports.extractUser = function(req,res,next){
-    passport.authenticate("jwt", function(err,user){
-        if(err) { return next(err) }
-        if(!user) { return res.status(401) }
-        user = setUserInfo(user);
-        return res.status(200).send(user);
+exports.JWTVerify = function(req,res,next){
+    passport.authenticate("jwtVerify", function(err,userId,info){
+        if(err || info) {
+            if(!err)
+                err.message = info;
+            //console.log(err || info);
+            console.log("err",err);
+            return next(err);
+        }
+        if(!userId) { return res.status(401) }
+        req.user = {
+            id : userId
+        }
+        return next();
     })(req);
 }
 

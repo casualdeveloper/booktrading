@@ -1,12 +1,12 @@
-import React from "react";
-import { Button, Checkbox, Form, Grid, Segment, Icon, Header, Message } from "semantic-ui-react"
+import React, { Component } from "react";
+import { Button, Form, Grid, Segment, Icon, Header, Message } from "semantic-ui-react"
 import { Link, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { userSignup } from "../actions";
 
-class Signup extends React.Component{
-        constructor(props){
+class Signup extends Component{
+    constructor(props){
         super(props);
         this.state = {
             username:"",
@@ -28,7 +28,7 @@ class Signup extends React.Component{
   }
 
     render(){
-        if(this.props.user._id){
+        if(this.props.user.isAuth){
             return (
                 <Redirect to="/" />
             );

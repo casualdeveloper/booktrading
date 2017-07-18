@@ -7,6 +7,6 @@ router.post("/signup", AuthenticationController.register);
 
 router.post("/login", AuthenticationController.localLogin, AuthenticationController.login);
 
-router.post("/extractJWT",AuthenticationController.extractUser);
+router.post("/extractJWT",AuthenticationController.JWTVerify,AuthenticationController.loginNoJWT);
 
 module.exports = router;

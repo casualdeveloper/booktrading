@@ -26,7 +26,7 @@ const localLogin = new LocalStrategy(function(username, password, done) {
 });
 
 const jwtLogin = new JwtStrategy(jwtOptions, function(payload, done) {  
-    User.findById(payload._id, function(err, user) {
+    User.findById(payload.id, function(err, user) {
         if (err) { return done(err, false); }
 
         if (user) {
@@ -36,6 +36,13 @@ const jwtLogin = new JwtStrategy(jwtOptions, function(payload, done) {
         }
     });
 });
+
+const jwtVerify = new JwtStrategy(jwtOptions, function(payload, done) {
+    const userId = payload.id;
+    done(null, userId);
+});
+
+passport.use("jwtVerify", jwtVerify);
 passport.use(jwtLogin); 
 passport.use(localLogin);
 

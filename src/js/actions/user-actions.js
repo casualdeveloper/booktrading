@@ -1,4 +1,4 @@
-import { USER_LOGIN,USER_LOGOUT, USER_LOGIN_ERROR, USER_LOGIN_LOADING, USER_SIGNUP_ERROR, USER_SIGNUP_LOADING, USER_FETCHING_DATA } from "./types";
+import { USER_LOGIN,USER_LOGOUT, USER_LOGIN_ERROR, USER_LOGIN_LOADING, USER_SIGNUP_ERROR, USER_SIGNUP_LOADING, USER_FETCHING_DATA, USER_PROFILE_UPDATE_ERROR, USER_PROFILE_UPDATE_LOADING } from "./types";
 import axios from "axios";
 
 const setAuthPost = (token) => {
@@ -34,7 +34,6 @@ const setUser = (user) => {
 
 const authPost = axios.create({
   headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
       "Authorization": getJWT()
     }
 });
@@ -77,8 +76,8 @@ export const userLocalLogin = () => {
             authPost.post("/api/auth/extractJWT")
                 .then(response => {
                     dispatch(userFetchingData(false));
-                    dispatch(userLoginSuccess(response.data));
-                    setUser(response.data);
+                    dispatch(userLoginSuccess(response.data.user));
+                    setUser(response.data.user);
                 })
                 .catch(err => {
                     dispatch(userFetchingData(false));
@@ -158,5 +157,36 @@ export const userFetchingData = (bool) => {
     return {
         type: USER_FETCHING_DATA,
         payload: bool
+    }
+}
+
+export const updateProfile = (data) => {
+    return (dispatch) => {
+        dispatch(updateProfileLoading(true));
+
+        authPost.post("/api/user/updateProfile", data)
+            .then(response => {
+                dispatch(updateProfileLoading(false));
+                dispatch(userLoginSuccess(response.data.user));
+                setUser(response.data.user);
+            })
+            .catch(error => {
+                dispatch(updateProfileLoading(false));
+                dispatch(updateProfileError(error.response.data.error || "Error"));
+            });
+    }
+}
+
+export const updateProfileLoading = (bool) => {
+    return {
+        type: USER_PROFILE_UPDATE_LOADING,
+        payload: bool
+    }
+}
+
+export const updateProfileError = (error) => {
+    return {
+        type: USER_PROFILE_UPDATE_ERROR,
+        paylaod: error
     }
 }

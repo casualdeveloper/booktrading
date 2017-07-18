@@ -40,7 +40,7 @@ module.exports = {
     entry: {
         app:PATHS.app,
     },
-    devtool:"cheap-source-map",
+    devtool:"eval",
     output: {
         filename: (process.env.NODE_ENV === "production") ? "[name].[chunkhash].js" : "[name].js",
         path: PATHS.build
@@ -65,10 +65,7 @@ module.exports = {
             },
             {
                 test: /(\.js|.jsx)$/,
-                loader: "babel-loader",
-                options: {
-                    presets: ["es2015","react"]
-                },
+                loader: "babel-loader"
             },
             {
                 test: /\.(png|svg|ttf|eot|woff|woff2)$/,

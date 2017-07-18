@@ -9,7 +9,16 @@ const userSchema = mongoose.Schema({
     email: {type: String, required: true, unique: true},
     profile: {
         firstName: { type: String },
-        lastName: { type: String }
+        lastName: { type: String },
+        country: {
+            full: {type: String},
+            short: {type: String }
+        },
+        state: {
+            full: {type: String},
+            short: {type: String }
+        },
+        city: { type: String }
     },
 });
 

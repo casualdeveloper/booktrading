@@ -7,6 +7,7 @@ import {bindActionCreators} from "redux";
 import Home from "./components/Home";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
+import Settings from "./components/Settings";
 
 import { userLogout, userLocalLogin } from "./actions";
 
@@ -17,19 +18,25 @@ class App extends React.Component {
     }
 
     render(){
-        const pathname = this.context.router.history.location.pathname;
+        //examples
+        // "/login"             -> ["","login"]
+        // "/settings/security" -> ["","settings","security"] 
+        const pathname = this.context.router.history.location.pathname.split("/")[1];
         
-        const userExists = !!(this.props.user._id);
+        
+        const userExists = this.props.user.isAuth;
 
         const LoginSubmenu = (
             <Menu.Menu position="right">
-                <Menu.Item as={Link} to="/login" content="Login" active={pathname === "/login"} />
-                <Menu.Item as={Link} to="/signup" content="Signup" active={pathname === "/signup"}   />
+                <Menu.Item as={Link} to="/login" content="Login" active={pathname === "login"} />
+                <Menu.Item as={Link} to="/signup" content="Signup" active={pathname === "signup"}   />
             </Menu.Menu>
         );
 
         const UserProfileSubmenu = (
             <Menu.Menu position="right">
+                <Menu.Item as={Link} to="/mybooks" content="My Books" active={pathname === "mybooks"} />
+                <Menu.Item as={Link} to="/settings" content="Settings" active={pathname === "settings"} />
                 <Menu.Item content="Logout" onClick={()=>{this.props.userLogout()}} />
             </Menu.Menu>
         );
@@ -41,12 +48,14 @@ class App extends React.Component {
                     <Loader>Loading</Loader>
                 </Dimmer> 
                 <Menu text color="teal" size="massive" fluid>
-                    <Menu.Item as={Link} to="/" content="Home" active={pathname === "/"} />
+                    <Menu.Item as={Link} to="/" content="Home" active={pathname === ""} />
                     {userExists?UserProfileSubmenu:LoginSubmenu}
                 </Menu>
                 <Route exact path="/" component={Home}/>
                 <Route path="/login" component={Login} />
-                <Route path ="/signup" component={Signup} />
+                <Route path="/signup" component={Signup} />
+                <Route exact path="/settings" component={Settings} />
+                <Route path="/settings/:activeTab" component={Settings} />
                    
             </Container>
         );

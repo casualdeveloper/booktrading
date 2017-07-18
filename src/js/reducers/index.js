@@ -1,15 +1,15 @@
 import { combineReducers } from "redux";
-import clickReducer from "./click-reducer";
-import { user, userLoginError, userLoginLoading, userSignupError, userSignupLoading, userFetchingData} from "./user-reducer";
+import { user, userLoginError, userLoginLoading, userSignupError, userSignupLoading, userFetchingData, userProfileUpdateLoading, userProfileUpdateError} from "./user-reducer";
 
 const reducers = combineReducers({
-    clicks: clickReducer,
     user: user,
     userLoginLoading: userLoginLoading,
     userLoginError: userLoginError,
     userSignupLoading: userSignupLoading,
     userSignupError: userSignupError,
-    userFetchingData: userFetchingData
+    userFetchingData: userFetchingData,
+    userProfileUpdateLoading: userProfileUpdateLoading,
+    userProfileUpdateError: userProfileUpdateError
 });
 
 export default reducers;
