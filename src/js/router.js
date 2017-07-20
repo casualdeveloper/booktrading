@@ -19,8 +19,8 @@ class App extends React.Component {
 
     render(){
         //examples
-        // "/login"             -> ["","login"]
-        // "/settings/security" -> ["","settings","security"] 
+        // "/login" -> ["","login"] -> "login"
+        // "/settings/security" -> ["","settings","security"] -> "settigns" 
         const pathname = this.context.router.history.location.pathname.split("/")[1];
         
         
@@ -65,7 +65,7 @@ class App extends React.Component {
 function mapStateToProps(state){
     return {
         user: state.user,
-        userLoading: state.userFetchingData
+        userLoading: state.user.fetchingData
     }
 }
 

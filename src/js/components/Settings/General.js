@@ -121,8 +121,8 @@ class SettingsGeneral extends Component{
 function mapStateToProps(state){
     return {
         user: state.user,
-        loading: state.userProfileUpdateLoading,
-        error: state.userProfileUpdateError
+        loading: state.user.profileUpdateLoading,
+        error: state.user.profileUpdateError
     }
 }
 

@@ -116,8 +116,10 @@ exports.register = function(req, res, next) {
             if (err) { return next(err); }
 
             // Login user if user was created
-            req.user.id = user.id;
-            login(req,res,next);
+            req.user = {
+                id: user.id
+            }
+            exports.login(req,res,next);
         });
     });
 }
