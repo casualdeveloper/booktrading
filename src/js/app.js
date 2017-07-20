@@ -6,9 +6,10 @@ import {createStore, applyMiddleware} from "redux";
 import {Provider} from "react-redux";
 import reducers from "./reducers";
 import ReduxThunk  from "redux-thunk";
+import { loginFlowMiddleware } from "./middleware/loginFlow";
 import "../styles/style.scss";
 
-const store = createStore(reducers,applyMiddleware(ReduxThunk));
+const store = createStore(reducers,applyMiddleware(ReduxThunk, loginFlowMiddleware));
 
 ReactDOM.render(
     <Provider store={store}>

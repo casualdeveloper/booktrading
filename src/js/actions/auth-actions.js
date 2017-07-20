@@ -1,40 +1,14 @@
 import { USER_LOGIN,USER_LOGOUT, USER_LOGIN_ERROR, USER_LOGIN_LOADING, USER_SIGNUP_ERROR, USER_SIGNUP_LOADING, USER_FETCHING_DATA} from "./types";
 import axios from "axios";
+import * as localData from "../localData/userLocalData";
 
 export const setAuthPost = (token) => {
-    authPost.defaults.headers.common["Authorization"] = token || getJWT();
-}
-
-export const setUserData = (data) => {
-    window.localStorage.setItem("JWT",data.token);
-    window.localStorage.setItem("user",JSON.stringify(data.user));
-    setAuthPost(data.token);
-}
-
-export const removeUserData = () => {
-    window.localStorage.removeItem("JWT");
-    window.localStorage.removeItem("user");
-}
-
-export const getJWT = () => {
-    return window.localStorage.getItem("JWT");
-}
-
-export const getUser = () => {
-    return JSON.parse(window.localStorage.getItem("user"));
-}
-
-export const setJWT = (token) => {
-    window.localStorage.setItem("JWT",token);
-}
-
-export const setUser = (user) => {
-    window.localStorage.setItem("user",JSON.stringify(user));
+    authPost.defaults.headers.common["Authorization"] = token || localData.getJWT();
 }
 
 export const authPost = axios.create({
   headers: {
-      "Authorization": getJWT()
+      "Authorization": localData.getJWT()
     }
 });
 
@@ -44,27 +18,23 @@ export const userLogin = (user) => {
 
         axios.post("/api/auth/login", user)
             .then(response => {
-                dispatch(userLoginLoading(false));
                 dispatch(userLoginSuccess(response.data.user));
-                dispatch(userLoginError(false));
-                setUserData(response.data);
+                localData.setUserData(response.data);
             })
             .catch(error => {
-                dispatch(userLoginLoading(false));
                 dispatch(userLoginError(error.response.data.error));
             });
     }
     
 }
 
-
 //to login user after website reload...
 export const userLocalLogin = () => {
-    const JWT = getJWT();
-    const user = getUser();
+    const JWT = localData.getJWT();
+    const user = localData.getUser();
     
     return (dispatch) => {
-        if(!JWT){
+        if(!JWT || JWT === "undefined"){
             return dispatch(userLogout());
         }
         if(user){
@@ -77,7 +47,7 @@ export const userLocalLogin = () => {
                 .then(response => {
                     dispatch(userFetchingData(false));
                     dispatch(userLoginSuccess(response.data.user));
-                    setUser(response.data.user);
+                    localData.setUser(response.data.user);
                 })
                 .catch(err => {
                     dispatch(userFetchingData(false));
@@ -91,7 +61,7 @@ export const userLocalLogin = () => {
 }
 
 export const userLogout = () => {
-    removeUserData();
+    localData.removeUserData();
     return {
         type: USER_LOGOUT
     }
@@ -129,9 +99,8 @@ export const userSignup = (user) => {
                 dispatch(userSignupLoading(false));
                 dispatch(userSignupError(null));
                 //login user
-                console.log(response);
                 dispatch(userLoginSuccess(response.data.user));
-                setUserData(response.data);
+                localData.setUserData(response.data);
             })
             .catch(error => {
                 dispatch(userSignupLoading(false));

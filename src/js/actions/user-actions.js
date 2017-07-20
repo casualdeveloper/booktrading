@@ -1,6 +1,7 @@
 import {USER_PROFILE_UPDATE_ERROR, USER_PROFILE_UPDATE_LOADING } from "./types";
 import axios from "axios";
-import { authPost, userLoginSuccess, setUser } from "./auth-actions";
+import { authPost, userLoginSuccess } from "./auth-actions";
+import * as localData from "../localData/userLocalData";
 
 export const updateProfile = (data) => {
     return (dispatch) => {
@@ -10,7 +11,7 @@ export const updateProfile = (data) => {
             .then(response => {
                 dispatch(updateProfileLoading(false));
                 dispatch(userLoginSuccess(response.data.user));
-                setUser(response.data.user);
+                localData.setUser(response.data.user);
             })
             .catch(error => {
                 dispatch(updateProfileLoading(false));
