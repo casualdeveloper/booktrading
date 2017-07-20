@@ -1,5 +1,5 @@
 import { USER_LOGIN, USER_LOGIN_ERROR } from "../actions/types";
-import { userLoginError, userLoginLoading } from "../actions/auth-actions";
+import { userLoginError, userLoginLoading } from "../actions";
 
 export const loginFlowMiddleware = ({ dispatch }) => next => action => {
     // Let the reducer save the user data

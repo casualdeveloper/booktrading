@@ -1,4 +1,4 @@
-import { setAuthPost } from "../actions/auth-actions";
+import { setAuthPost } from "../actions";
 
 export const setUserData = (data) => {
     window.localStorage.setItem("JWT",data.token);
@@ -18,11 +18,11 @@ export const getJWT = () => {
 export const getUser = () => {
     let json;
     try {
-        json = JSON.parse(JSON.parse(window.localStorage.getItem("user")));
+        json = JSON.parse(window.localStorage.getItem("user"));
     } catch (e){
         json = null;
     }
-    return json;
+    return null;
 }
 
 export const setJWT = (token) => {

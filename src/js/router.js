@@ -18,11 +18,18 @@ class App extends React.Component {
     }
 
     render(){
-        //examples
+        if(!this.props.user.isAuth || this.props.userLoading){
+            return (
+                <Dimmer active={this.props.userLoading} page>
+                    <Loader>Loading</Loader>
+                </Dimmer>
+            );
+        }
+
+        // examples
         // "/login" -> ["","login"] -> "login"
         // "/settings/security" -> ["","settings","security"] -> "settigns" 
-        const pathname = this.context.router.history.location.pathname.split("/")[1];
-        
+        const pathname = this.props.location.pathname.split("/")[1];
         
         const userExists = this.props.user.isAuth;
 
@@ -44,9 +51,6 @@ class App extends React.Component {
 
         return(
             <Container>
-                <Dimmer active={this.props.userLoading} page>
-                    <Loader>Loading</Loader>
-                </Dimmer> 
                 <Menu text color="teal" size="massive" fluid>
                     <Menu.Item as={Link} to="/" content="Home" active={pathname === ""} />
                     {userExists?UserProfileSubmenu:LoginSubmenu}

@@ -13,6 +13,7 @@ const stateOptions = lists["states"];
 class SettingsGeneral extends Component{
     constructor(props){
         super(props);
+
         this.state = {
             options: [{}],
             optionsLoading: false,

@@ -11,3 +11,23 @@ export function userProfileUpdateError(state, action) {
         profileUpdateError: action.payload
     };
 }
+export function userChangePasswordLoading(state, action){
+    return {
+        ...state,
+        changePasswordLoading: action.payload
+    }
+}
+
+export function userChangePasswordError(state, action) {
+    return {
+        ...state,
+        changePasswordError: action.payload
+    }
+}
+
+export function userChangePasswordSuccess(state, action){
+    return {
+        ...state,
+        changePasswordSuccess: action.payload
+    }
+}

@@ -4,5 +4,8 @@ const userController = require("../controllers/user");
 const authController = require("../controllers/authentication");
 
 router.post("/updateProfile", authController.JWTVerify, userController.updateProfile, authController.loginNoJWT);
+router.post("/changepassword", authController.JWTVerify, userController.changePassword, function(req,res){
+    res.status(200).json({message:"Password changed successfully!"});
+});
 
 module.exports = router;

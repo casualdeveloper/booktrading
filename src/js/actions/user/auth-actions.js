@@ -1,6 +1,6 @@
-import { USER_LOGIN,USER_LOGOUT, USER_LOGIN_ERROR, USER_LOGIN_LOADING, USER_SIGNUP_ERROR, USER_SIGNUP_LOADING, USER_FETCHING_DATA} from "./types";
+import { USER_LOGIN,USER_LOGOUT, USER_LOGIN_ERROR, USER_LOGIN_LOADING, USER_SIGNUP_ERROR, USER_SIGNUP_LOADING, USER_FETCHING_DATA} from "../types";
 import axios from "axios";
-import * as localData from "../localData/userLocalData";
+import * as localData from "../../localData/userLocalData";
 
 export const setAuthPost = (token) => {
     authPost.defaults.headers.common["Authorization"] = token || localData.getJWT();
@@ -45,8 +45,8 @@ export const userLocalLogin = () => {
 
             authPost.post("/api/auth/extractJWT")
                 .then(response => {
-                    dispatch(userFetchingData(false));
                     dispatch(userLoginSuccess(response.data.user));
+                    dispatch(userFetchingData(false));
                     localData.setUser(response.data.user);
                 })
                 .catch(err => {

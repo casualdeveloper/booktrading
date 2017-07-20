@@ -46,9 +46,9 @@ class Signup extends Component{
                                     header="Failed Signup attempt"
                                     content={this.props.error}
                                 />
-                                <Form.Input name="email" icon="mail" iconPosition="left" type="text" placeholder="E-mail address" onChange={this.handleInputChange} />
-                                <Form.Input name="username" icon="user" iconPosition="left" type="text" placeholder="Username" onChange={this.handleInputChange} />
-                                <Form.Input name="password" icon="lock" iconPosition="left" type="password" placeholder="Password" onChange={this.handleInputChange} />
+                                <Form.Input name="email" icon="mail" iconPosition="left" type="text" placeholder="E-mail address" value={this.state.email} onChange={this.handleInputChange} />
+                                <Form.Input name="username" icon="user" iconPosition="left" type="text" placeholder="Username" value={this.state.username} onChange={this.handleInputChange} />
+                                <Form.Input name="password" icon="lock" iconPosition="left" type="password" placeholder="Password" value={this.state.password} onChange={this.handleInputChange} />
                                 <Form.Button color="teal" fluid>Submit</Form.Button>
                             </Form>
                         </Segment>
