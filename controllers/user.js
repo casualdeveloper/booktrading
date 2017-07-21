@@ -59,11 +59,9 @@ exports.checkForMatch = function(req, res, next) {
 
     User.findOne({ [checkAgainst]: checkItem }, function(err, foundUser){
         if(foundUser){
-            console.log("matches");
             return res.status(422).json({error: `This ${checkAgainst} already in use.`});
         }
 
-        console.log("doesn't match");
         return res.status(200).json({});
         
     });
