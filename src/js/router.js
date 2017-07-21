@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Link, withRouter  } from "react-router-dom";
+import { Route, Link, withRouter, Redirect  } from "react-router-dom";
 import { Menu, Container, Dimmer, Loader } from "semantic-ui-react";
 import { connect } from "react-redux";
 import {bindActionCreators} from "redux";
@@ -18,14 +18,13 @@ class App extends React.Component {
     }
 
     render(){
-        if(!this.props.user.isAuth || this.props.userLoading){
-            return (
-                <Dimmer active={this.props.userLoading} page>
+        if(this.props.user.fetchingData){
+            return(
+                <Dimmer active>
                     <Loader>Loading</Loader>
                 </Dimmer>
             );
         }
-
         // examples
         // "/login" -> ["","login"] -> "login"
         // "/settings/security" -> ["","settings","security"] -> "settigns" 
@@ -58,12 +57,29 @@ class App extends React.Component {
                 <Route exact path="/" component={Home}/>
                 <Route path="/login" component={Login} />
                 <Route path="/signup" component={Signup} />
-                <Route exact path="/settings" component={Settings} />
-                <Route path="/settings/:activeTab" component={Settings} />
+                <PrivateRoute exact path="/settings" component={Settings} {...this.props} />
+                <PrivateRoute path="/settings/:activeTab" component={Settings} {...this.props} />
                    
             </Container>
         );
    }
+}
+
+
+const PrivateRoute = ({component:Component, user:user, ...rest}) => {
+    if(user.isAuth){
+        return ( 
+            <Route {...rest} render={(props) => (
+                <Component {...props}/>
+            )} /> 
+        );
+    }
+
+    return (
+        <Route {...rest} render={(props) => (
+            <Redirect to={{ pathname: "/login", state: { from: props.location }}} />
+        )} />
+    );
 }
 
 function mapStateToProps(state){

@@ -16,7 +16,7 @@ import {
 import * as user from "./user-reducer";
 import * as auth from "./auth-reducer";
 
-export function userReducer(state = {}, action) {
+export function userReducer(state = {fetchingData: true}, action) {
     switch(action.type){
         case USER_LOGIN: return ( auth.userLogin(state, action) );
         case USER_LOGOUT: return ( auth.userLogout(state,action) );

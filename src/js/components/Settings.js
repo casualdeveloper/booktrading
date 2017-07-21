@@ -3,14 +3,13 @@ import { Button, Form, Grid, Segment, Icon, Header, Message, Menu } from "semant
 import { Link, Route } from "react-router-dom";
 
 import SettingsGeneral from "./Settings/General";
-import SettingsOverview from "./Settings/Overview";
 import SettingsSecurity from "./Settings/Security";
 
 class Settings extends Component{
     constructor(props){
         super(props);
         this.state = {
-            activeItem: props.match.params.activeTab || "overview"
+            activeItem: props.match.params.activeTab || "general"
         };
         this.handleItemClick = (e, { name }) => this.setState({ activeItem: name });
     }
@@ -26,14 +25,13 @@ class Settings extends Component{
                             <Icon name="settings" />
                             Account Settings
                         </Header>
-                        <Menu widths={3}>
-                            <Menu.Item as={Link} to="/settings/overview" name="overview" active={activeItem === "overview"} onClick={this.handleItemClick} />
+                        <Menu widths={2}>
                             <Menu.Item as={Link} to="/settings/general" name="general" active={activeItem === "general"} onClick={this.handleItemClick} />
                             <Menu.Item as={Link} to="/settings/security" name="security" active={activeItem === "security"} onClick={this.handleItemClick} />
                         </Menu>
                         <Route path={"/settings/:activeTab"} component={RenderSegment}/>
                         <Route exact path={"/settings"} render={() => (
-                            <SettingsOverview />
+                            <SettingsGeneral />
                         )}/>
                     </Grid.Column>
                 </Grid>
@@ -42,9 +40,6 @@ class Settings extends Component{
 }
 
 const RenderSegment = ({ match }) => {
-    if(match.params.activeTab === "overview"){
-        return <SettingsOverview />;
-    }
     if(match.params.activeTab === "general"){
         return <SettingsGeneral />;
     }

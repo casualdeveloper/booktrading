@@ -15,6 +15,7 @@ class Login extends Component {
 
         this.login = this.login.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
+        this.redirectTo = (props.location.state && props.location.state.from)?props.location.state.from.pathname:"/"; 
     }
 
     handleInputChange(e){
@@ -35,7 +36,7 @@ class Login extends Component {
     render(){
         if(this.props.user.isAuth){
             return (
-                <Redirect to="/" />
+                <Redirect to={this.redirectTo} />
             );
         }
 

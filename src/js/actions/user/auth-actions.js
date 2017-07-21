@@ -35,14 +35,14 @@ export const userLocalLogin = () => {
     
     return (dispatch) => {
         if(!JWT || JWT === "undefined"){
+            dispatch(userFetchingData(false));
             return dispatch(userLogout());
         }
         if(user){
+            dispatch(userFetchingData(false));
             return dispatch(userLoginSuccess(user));
         }
         if(JWT){
-            dispatch(userFetchingData(true));
-
             authPost.post("/api/auth/extractJWT")
                 .then(response => {
                     dispatch(userLoginSuccess(response.data.user));
