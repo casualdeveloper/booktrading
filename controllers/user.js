@@ -34,18 +34,18 @@ exports.changePassword = function (req, res, next) {
         if(err) { return next(err) }
         
         foundUser.checkPassword(currentPassword, function(err, isMatch){
-            if(err) { next(err) }
-
+            if(err) { return next(err) }
+            
             if(!isMatch){
                 return res.status(422).json({error:"You entered wrong password"})
             }
-        });
 
-        foundUser.password = newPassword;
-        foundUser.save(function(err){
-            if(err) { return next(err) }
-            return next();
-        });
+            foundUser.password = newPassword;
+            foundUser.save(function(err){
+                if(err) { return next(err) }
+                return next();
+            });
 
+        });
     });
 }
