@@ -47,11 +47,12 @@ class Login extends Component {
                         <Header as="h2" color="teal">Log-in to your account</Header>
                         <Segment stacked>
                             <Form onSubmit={ this.login } loading={(this.props.loading)?true:false} error={this.props.error?true:false}>
-                                <Message
-                                    error
-                                    header="Failed login attempt"
-                                    content={this.props.error}
-                                />
+                                <Message error>
+                                    <Message.Content>
+                                        <Message.Header>Failed login attempt</Message.Header>
+                                        {this.props.error}
+                                    </Message.Content>
+                                </Message>
                                 <Form.Input name="username" icon="user" iconPosition="left" type="text" placeholder="Username" value={this.state.username} onChange={this.handleInputChange} />
                                 <Form.Input name="password" icon="lock" iconPosition="left" type="password" placeholder="Password" value={this.state.password} onChange={this.handleInputChange} />
                                 <Form.Button color="teal" fluid>Submit</Form.Button>

@@ -8,6 +8,7 @@ import {
     USER_FETCHING_DATA,
     USER_PROFILE_UPDATE_ERROR,
     USER_PROFILE_UPDATE_LOADING,
+    USER_PROFILE_UPDATE_SUCCESS,
     USER_CHANGE_PASSWORD_ERROR,
     USER_CHANGE_PASSWORD_LOADING,
     USER_CHANGE_PASSWORD_SUCCESS
@@ -27,6 +28,7 @@ export function userReducer(state = {fetchingData: true}, action) {
         case USER_FETCHING_DATA: return ( auth.userFetchingData(state,action) );
         case USER_PROFILE_UPDATE_ERROR: return ( user.userProfileUpdateError(state,action) );
         case USER_PROFILE_UPDATE_LOADING: return ( user.userProfileUpdateLoading(state,action) );
+        case USER_PROFILE_UPDATE_SUCCESS: return ( user.userProfileUpdateSuccess(state,action) );
         case USER_CHANGE_PASSWORD_ERROR: return ( user.userChangePasswordError(state,action) );
         case USER_CHANGE_PASSWORD_LOADING: return ( user.userChangePasswordLoading(state,action) );
         case USER_CHANGE_PASSWORD_SUCCESS: return ( user.userChangePasswordSuccess(state,action) );

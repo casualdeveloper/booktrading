@@ -7,5 +7,6 @@ router.post("/updateProfile", authController.JWTVerify, userController.updatePro
 router.post("/changepassword", authController.JWTVerify, userController.changePassword, function(req,res){
     res.status(200).json({message:"Password changed successfully!"});
 });
+router.post("/checkformatch", userController.checkForMatch);
 
 module.exports = router;

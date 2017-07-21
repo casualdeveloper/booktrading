@@ -19,10 +19,11 @@ export const userLogin = (user) => {
         axios.post("/api/auth/login", user)
             .then(response => {
                 dispatch(userLoginSuccess(response.data.user));
-                localData.setUserData(response.data);
+                localData.setJWT(response.data.token);
             })
             .catch(error => {
-                dispatch(userLoginError(error.response.data.error));
+                let errorMessage = error.response.data.error || "Something went wrong please try again later";
+                dispatch(userLoginError(errorMessage));
             });
     }
     
@@ -47,7 +48,6 @@ export const userLocalLogin = () => {
                 .then(response => {
                     dispatch(userLoginSuccess(response.data.user));
                     dispatch(userFetchingData(false));
-                    localData.setUser(response.data.user);
                 })
                 .catch(err => {
                     dispatch(userFetchingData(false));
@@ -100,11 +100,12 @@ export const userSignup = (user) => {
                 dispatch(userSignupError(null));
                 //login user
                 dispatch(userLoginSuccess(response.data.user));
-                localData.setUserData(response.data);
+                localData.setJWT(response.data.token);
             })
             .catch(error => {
                 dispatch(userSignupLoading(false));
-                dispatch(userSignupError(error.response.data.error));
+                let errorMessage = error.response.data.error || "Something went wrong please try again later";
+                dispatch(userSignupError(errorMessage));
             });
     }
 }

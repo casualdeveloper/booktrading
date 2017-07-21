@@ -11,6 +11,14 @@ export function userProfileUpdateError(state, action) {
         profileUpdateError: action.payload
     };
 }
+
+export function userProfileUpdateSuccess(state, action){
+    return {
+        ...state,
+        profileUpdateSuccess: action.payload
+    }
+}
+
 export function userChangePasswordLoading(state, action){
     return {
         ...state,

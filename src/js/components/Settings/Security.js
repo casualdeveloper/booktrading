@@ -1,8 +1,8 @@
 import React, {Component} from "react";
-import { Segment, Form, Message, Divider, Header} from "semantic-ui-react";
+import { Segment, Form, Message, Divider, Header, Icon} from "semantic-ui-react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { changePassword, changePasswordError } from "../../actions";
+import { changePassword, changePasswordError, changePasswordSuccess } from "../../actions";
 
 
 class SettingsSecurity extends Component{
@@ -32,8 +32,11 @@ class SettingsSecurity extends Component{
         }
         
         return this.props.changePasswordError("Password don't match");
+    }
 
-
+    componentWillUnmount(){
+        this.props.changePasswordError(false);
+        this.props.changePasswordSuccess(false);
     }
 
     render(){
@@ -44,18 +47,23 @@ class SettingsSecurity extends Component{
             <Segment>
                 <Header size="small">Change password</Header>
                 <Form onSubmit={this.submit} loading={isLoading} error={showError} success={showSuccess} >
-                    <Message
-                        icon="remove circle outline"
-                        error
-                        header="Failed to change password"
-                        content={this.props.error}
-                    />
-                    <Message
-                        icon="check circle outline"
-                        success
-                        header="Success"
-                        content={this.props.success}
-                    />
+
+                    <Message error icon>
+                        <Icon name="remove circle outline"/>
+                        <Message.Content>
+                            <Message.Header>Failed to change password</Message.Header>
+                            {this.props.error}
+                        </Message.Content>
+                    </Message>
+
+                    <Message success icon>
+                        <Icon name="check circle outline"/>
+                        <Message.Content>
+                            <Message.Header>Success</Message.Header>
+                            {this.props.success}
+                        </Message.Content>
+                    </Message>
+
                     <Form.Input name="currentPassword" type="password" placeholder="Current password" value={this.state.currentPassword} onChange={this.handleInputChange} />
                     <Divider />
                     <Form.Input name="newPassword" type="password" placeholder="New password" value={this.state.newPassword} onChange={this.handleInputChange} />
@@ -77,7 +85,7 @@ function mapStateToProps(state){
 }
 
 function mapDispatchToProps(dispatch){
-    return bindActionCreators({changePassword, changePasswordError}, dispatch);
+    return bindActionCreators({changePassword, changePasswordError, changePasswordSuccess}, dispatch);
 }
 
 

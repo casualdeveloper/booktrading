@@ -27,6 +27,7 @@ export const getUser = () => {
 
 export const setJWT = (token) => {
     window.localStorage.setItem("JWT",token);
+    setAuthPost(token);
 }
 
 export const setUser = (user) => {

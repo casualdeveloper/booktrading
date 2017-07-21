@@ -8,6 +8,7 @@ import Home from "./components/Home";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 import Settings from "./components/Settings";
+import Mybooks from "./components/Mybooks";
 
 import { userLogout, userLocalLogin } from "./actions";
 
@@ -57,6 +58,7 @@ class App extends React.Component {
                 <Route exact path="/" component={Home}/>
                 <Route path="/login" component={Login} />
                 <Route path="/signup" component={Signup} />
+                <PrivateRoute path="/mybooks" component={Mybooks} {...this.props} />
                 <PrivateRoute exact path="/settings" component={Settings} {...this.props} />
                 <PrivateRoute path="/settings/:activeTab" component={Settings} {...this.props} />
                    

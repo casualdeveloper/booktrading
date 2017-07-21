@@ -49,3 +49,23 @@ exports.changePassword = function (req, res, next) {
         });
     });
 }
+
+exports.checkForMatch = function(req, res, next) {
+    const username = req.body.username;
+    const email = req.body.email;
+
+    const checkAgainst = (username)?"username":"email";
+    const checkItem = (username)?username:email;
+
+    User.findOne({ [checkAgainst]: checkItem }, function(err, foundUser){
+        if(foundUser){
+            console.log("matches");
+            return res.status(422).json({error: `This ${checkAgainst} already in use.`});
+        }
+
+        console.log("doesn't match");
+        return res.status(200).json({});
+        
+    });
+
+}

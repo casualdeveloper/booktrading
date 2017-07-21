@@ -3,7 +3,7 @@ import { Segment, Form, Message, Header} from "semantic-ui-react";
 import lists from "../../lists.json";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { updateProfile } from "../../actions";
+import { updateProfile, updateProfileError, updateProfileSuccess } from "../../actions";
 
 
 // load country and state lists
@@ -85,16 +85,35 @@ class SettingsGeneral extends Component{
 
     }
 
+    componentWillUnmount(){
+        this.props.updateProfileError(false);
+        this.props.updateProfileSuccess(false);
+    }
+
     render(){
+        const showError = this.props.error?true:false;
+        const showSuccess = this.props.success?true:false;
+        const isLoading = this.props.loading?true:false;
+
         return(
             <Segment>
                 <Header size="small">Profile Settings</Header>
-                <Form onSubmit={this.submit} loading={(this.props.loading)?true:false} error={this.props.error?true:false}>
-                    <Message
-                        error
-                        header="Failed to update"
-                        content={this.props.error}
-                    />
+                <Form onSubmit={this.submit} loading={isLoading} error={showError} success={showSuccess}>
+
+                    <Message error >
+                        <Message.Content>
+                            <Message.Header>Failed to update</Message.Header>
+                            {this.props.error}
+                        </Message.Content>
+                    </Message>
+
+                    <Message success >
+                        <Message.Content>
+                            <Message.Header>Profile update</Message.Header>
+                            {this.props.success}
+                        </Message.Content>
+                    </Message>
+
                     <Form.Input name="firstName" type="text" placeholder="First name" value={this.state.firstName} onChange={this.handleInputChange} />
                     <Form.Input name="lastName" type="text" placeholder="Last name" value={this.state.lastName} onChange={this.handleInputChange} />
                     <Form.Dropdown placeholder="Select Country" fluid selection 
@@ -123,12 +142,13 @@ function mapStateToProps(state){
     return {
         user: state.user,
         loading: state.user.profileUpdateLoading,
-        error: state.user.profileUpdateError
+        error: state.user.profileUpdateError,
+        success: state.user.profileUpdateSuccess
     }
 }
 
 function mapDispatchToProps(dispatch){
-    return bindActionCreators({updateProfile: updateProfile}, dispatch);
+    return bindActionCreators({updateProfile, updateProfileError, updateProfileSuccess}, dispatch);
 }
 
 
