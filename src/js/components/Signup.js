@@ -91,8 +91,8 @@ class Signup extends Component{
                 <Grid.Column mobile={16} computer={8} tablet={10}>
                     <Header as="h2" color="teal">Create a new account</Header>
                     <Segment stacked>
-                        <Form onSubmit={this.signup} loading={isLoading} error={formError}>
-                            <Message error > 
+                        <Form onSubmit={this.signup} loading={isLoading}>
+                            <Message visible={formError} error > 
                                 <Message.Content>
                                     <Message.Header>Failed Signup attempt</Message.Header>
                                     {this.props.error}
