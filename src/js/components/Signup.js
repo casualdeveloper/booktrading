@@ -13,17 +13,9 @@ class Signup extends Component{
             username:"",
             password:"",
             email:"",
-            
-            emailError: false,
-            emailMessages: [],
             emailLoading: false,
-            
-            usernameError: false,
-            usernameMessages: [],
             usernameLoading: false,
-
-            passwordError: false,
-            passwordMessages: []
+            errorMessages: []
         }
 
         this.signup = this.signup.bind(this);
@@ -61,15 +53,19 @@ class Signup extends Component{
         this.setState({[e.target.name+"Loading"]: true});
         axios.post("/api/user/checkformatch", {[e.target.name]: e.target.value }, axiosConfig)
             .then(response => {
-                this.setState({ [e.target.name+"Error"]: false, [e.target.name+"Messages"]: [] ,  [e.target.name+"Success"]: true, [e.target.name+"Loading"]: false })
+                let messages = this.state.errorMessages.slice(0);
+                let messageIndex = messages.findIndex((obj) => { return Object.keys(obj).indexOf(e.target.name) !== -1 });
+                if(messageIndex !== -1)
+                    messages.splice(messageIndex, 1);
+                this.setState({ errorMessages: messages , [e.target.name+"Loading"]: false })
             })
             .catch(error => {
                 if (axios.isCancel(error)) {
                     return;
                 } else {
-                    let messages = this.state[e.target.name+"Messages"].slice();
-                    messages.push(error.response.data.error);
-                    this.setState({ [e.target.name+"Messages"]: messages, [e.target.name+"Error"]: true , [e.target.name+"Success"]: false, [e.target.name+"Loading"]: false })
+                    let messages = this.state.errorMessages.slice(0);
+                    messages.push({[e.target.name]: error.response.data.error});//example {"password": "error message"}
+                    this.setState({ errorMessages: messages, [e.target.name+"Loading"]: false })
                 }
             });
     }
@@ -85,9 +81,8 @@ class Signup extends Component{
             );
         }
 
-        const { username, usernameLoading, usernameError, usernameMessages, emailError, emailLoading, emailMessages, email, password, passwordError, passwordMessages} = this.state;
-        const allMessages = emailMessages.concat(usernameMessages, passwordMessages);
-        const showInputError = !!(usernameError || passwordError || emailError);
+        const { username, usernameLoading, emailLoading, email, password, errorMessages} = this.state;
+        const showInputError = !!(errorMessages.length !== 0);
         const isLoading = (this.props.loading)?true:false;
         const formError = (this.props.error)?true:false;
 
@@ -110,9 +105,9 @@ class Signup extends Component{
                                 <Message.Content>
                                     <Message.Header>Some fields needs fixing</Message.Header>
                                     <Message.List>
-                                    {allMessages.map(text => (
-                                        <Message.Item>{text}</Message.Item>
-                                    ))}
+                                    {errorMessages.map(obj => {
+                                        return <Message.Item>{obj[Object.keys(obj)[0]]}</Message.Item>
+                                    })}
                                     </Message.List>
                                 </Message.Content>
                             </Message>
