@@ -69,5 +69,16 @@ exports.checkForMatch = function(req, res, next) {
 }
 
 exports.addBook = function(req,res,next){
-    res.status(200).json({});
+    User.findById(req.user.id, function(err, user){
+        if(err) next(err);
+        if(!user){
+            res.status(401).json({error:"Unauthorized"});
+        }
+        user.books.push(req.book.id);
+        user.save(function(err, user){
+            if(err) next(err);
+            res.status(200).json({book: req.book});
+        });
+
+    });
 }

@@ -9,7 +9,7 @@ import {
 
 import * as books from "./books-reducer";
 
-export function booksReducer(state = {}, action) {
+export function booksReducer(state = {books:[]}, action) {
     switch(action.type){
         case BOOK_SEARCH: return ( books.bookSearch(state, action) );
         case BOOK_SEARCH_ERROR: return ( books.bookSearchError(state, action) );

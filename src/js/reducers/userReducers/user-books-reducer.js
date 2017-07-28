@@ -3,6 +3,6 @@ export function userAddBook(state, action) {
     newBookList.push(action.payload);
     return {
         ...state,
-        books: bookList
+        books: newBookList
     }
 }

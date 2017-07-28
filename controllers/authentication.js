@@ -19,7 +19,8 @@ function setUserInfo(user) {
         state: user.profile.state,
         city: user.profile.city,
         email: user.email,
-        username: user.username
+        username: user.username,
+        books: user.books
     }
 };
 

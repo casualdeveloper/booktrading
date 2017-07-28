@@ -8,7 +8,7 @@ import {
 } from "../types";
 
 import axios from "axios";
-import {authPost, userLoginSuccess} from "../user/auth-actions";
+import {authPost, userAddBook} from "../user";
 import * as localData from "../../localData/userLocalData";
 
 export const searchBooks = (search) => {
@@ -46,10 +46,12 @@ export const addBook = (book) => {
         authPost.post("/api/books/addBook", {book: book})
             .then(response => {
                 dispatch(addBookLoading(false));
-                dispatch(addBookSuccess(response.data));
+                dispatch(addBookSuccess(response.data.book));
+                dispatch(userAddBook(response.data.book._id));
             })
             .catch(error => {
                 dispatch(addBookLoading(false));
+                console.log(error);
                 //dispatch(searchBooksError(error.response.data.error));
             });
         
