@@ -20,6 +20,7 @@ const userSchema = mongoose.Schema({
         },
         city: { type: String }
     },
+    books: []
 });
 
 userSchema.methods.name = function() {

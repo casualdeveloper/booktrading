@@ -58,9 +58,10 @@ class App extends React.Component {
                 <Route exact path="/" component={Home}/>
                 <Route path="/login" component={Login} />
                 <Route path="/signup" component={Signup} />
-                <PrivateRoute path="/mybooks" component={Mybooks} {...this.props} />
                 <PrivateRoute exact path="/settings" component={Settings} {...this.props} />
                 <PrivateRoute path="/settings/:activeTab" component={Settings} {...this.props} />
+                <PrivateRoute exact path="/mybooks" component={Mybooks} {...this.props} />
+                <PrivateRoute path="/mybooks/:activeTab" component={Mybooks} {...this.props} />
                    
             </Container>
         );

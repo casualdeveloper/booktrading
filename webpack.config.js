@@ -30,8 +30,7 @@ const cssLoader = function() {
         loader: "css-loader",
         options:{
             url: true,
-            importLoaders: 1,
-            modules: true,
+            importLoaders: 1
         }
     }
 }

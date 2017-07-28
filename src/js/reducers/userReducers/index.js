@@ -11,11 +11,13 @@ import {
     USER_PROFILE_UPDATE_SUCCESS,
     USER_CHANGE_PASSWORD_ERROR,
     USER_CHANGE_PASSWORD_LOADING,
-    USER_CHANGE_PASSWORD_SUCCESS
+    USER_CHANGE_PASSWORD_SUCCESS,
+    USER_ADD_BOOK
 } from "../../actions/types";
 
 import * as user from "./user-reducer";
 import * as auth from "./auth-reducer";
+import * as userBooks from "./user-books-reducer"
 
 export function userReducer(state = {fetchingData: true}, action) {
     switch(action.type){
@@ -32,6 +34,7 @@ export function userReducer(state = {fetchingData: true}, action) {
         case USER_CHANGE_PASSWORD_ERROR: return ( user.userChangePasswordError(state,action) );
         case USER_CHANGE_PASSWORD_LOADING: return ( user.userChangePasswordLoading(state,action) );
         case USER_CHANGE_PASSWORD_SUCCESS: return ( user.userChangePasswordSuccess(state,action) );
+        case USER_ADD_BOOK: return ( userBooks.userAddBook(state,action) );
         default: return state;
     }
 }

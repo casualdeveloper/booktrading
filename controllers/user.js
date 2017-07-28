@@ -67,3 +67,7 @@ exports.checkForMatch = function(req, res, next) {
     });
 
 }
+
+exports.addBook = function(req,res,next){
+    res.status(200).json({});
+}
