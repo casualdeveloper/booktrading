@@ -35,9 +35,16 @@ export function bookAddBook(state,action) {
     }
 }
 
+export function bookAddBookError(state, action){
+    return {
+        ...state,
+        bookAddError: action.payload
+    }
+}
+
 export function bookAddBookLoading(state, action) {
     return {
         ...state,
-        addBookLoading: action.payload
+        bookAddLoading: action.payload
     }
 }

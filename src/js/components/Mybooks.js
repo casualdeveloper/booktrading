@@ -1,8 +1,5 @@
 import React, { Component } from "react";
 import { Button, Grid, Segment, Icon, Header, Message, Input, Item, Card, Image, Divider, Menu } from "semantic-ui-react"
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { searchBooks, addBook, searchBooksSuccess } from "../actions";
 import { Link, Route } from "react-router-dom";
 
 import SearchSegment from "./Mybooks/Search";
@@ -47,17 +44,4 @@ const RenderSegment = (props) => {
     }
 }
 
-function mapStateToProps(state){
-    return {
-        searchLoading: state.books.bookSearchLoading,
-        searchError: state.books.bookSearchError,
-        searchFound: state.books.bookSearchResults,
-        addBookLoading: state.books.addBookLoading,
-    }
-}
-
-function mapDispatchToProps(dispatch){
-    return bindActionCreators({searchBooks, addBook, searchSetResults: searchBooksSuccess}, dispatch);
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Mybooks);
+export default Mybooks;

@@ -1,7 +1,10 @@
 import React, { Component } from "react";
 import { Button, Grid, Segment, Icon, Header, Message, Input, Item, Card, Image, Divider } from "semantic-ui-react"
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { searchBooks, addBook, searchBooksSuccess, addBookError, searchBooksError } from "../../actions";
 
-export default class SearchSegment extends Component {
+class SearchSegment extends Component {
     constructor(props){
         super(props);
 
@@ -26,12 +29,26 @@ export default class SearchSegment extends Component {
         this.setState({hidden:!this.state.hidden});
     }
 
+    componentWillUnmount(){
+        this.props.setAddBookError(null);
+        this.props.setSearchBooksError(null);
+    }
+
     render(){
         let hidden = this.state.hidden;
+        let isErrorHidden = !(this.props.addBookError || this.props.searchError);
+
         return(
             <div>
                 <Header as="h2" color="teal">Search For Books</Header>
                 <Segment raised>
+                    <Message error hidden={isErrorHidden}>
+                        <Message.Content>
+                            <Message.Header>Failed to add book</Message.Header>
+                            {this.props.addBookError}
+                            {this.props.searchError}
+                        </Message.Content>
+                    </Message>
                     <Input onChange={this.handleSearchChange} action={
                         <Button onClick={this.submit} loading={this.props.searchLoading} animated="fade" >
                             <Button.Content visible>Search</Button.Content>
@@ -150,3 +167,19 @@ const SearchResultCard = ({ image, title, index, active }) => {
         </Card>
     );
 }
+
+function mapStateToProps(state){
+    return {
+        searchLoading: state.books.bookSearchLoading,
+        searchError: state.books.bookSearchError,
+        searchFound: state.books.bookSearchResults,
+        addBookLoading: state.books.bookAddLoading,
+        addBookError: state.books.bookAddError
+    }
+}
+
+function mapDispatchToProps(dispatch){
+    return bindActionCreators({searchBooks, addBook, searchSetResults: searchBooksSuccess, setAddBookError: addBookError, setSearchBooksError: searchBooksError }, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(SearchSegment);

@@ -4,7 +4,8 @@ import {
     BOOK_SEARCH_LOADING,
     BOOK_SEARCH_SUCCESS,
     BOOK_ADD_BOOK,
-    BOOK_ADD_BOOK_LOADING
+    BOOK_ADD_BOOK_LOADING,
+    BOOK_ADD_BOOK_ERROR
 } from "../types";
 
 import axios from "axios";
@@ -51,8 +52,9 @@ export const addBook = (book) => {
             })
             .catch(error => {
                 dispatch(addBookLoading(false));
-                console.log(error);
-                //dispatch(searchBooksError(error.response.data.error));
+                let defaultError = "Failed to add book";
+                let errorMessage = (error.response && error.response.data && error.response.data.error )?error.response.data.error:defaultError;
+                dispatch(addBookError(errorMessage));
             });
         
     }    
@@ -60,6 +62,10 @@ export const addBook = (book) => {
 
 export const addBookSuccess = (book) => {
     return { type: BOOK_ADD_BOOK, payload: book }
+}
+
+export const addBookError = (error) => {
+    return { type: BOOK_ADD_BOOK_ERROR, payload: error }
 }
 
 export const addBookLoading = (bool) => {
