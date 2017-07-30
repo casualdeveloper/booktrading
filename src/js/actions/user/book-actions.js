@@ -15,13 +15,11 @@ export const userFetchBooks = () => {
                 dispatch(userFetchBooksLoading(false));
                 dispatch(userFetchBooksError(null));
                 dispatch(userFetchBooksSuccess(response.data.books));
-                console.log(response);
             })
             .catch(error => {
                 dispatch(userFetchBooksLoading(false));
                 let errorMessage = (error.response && error.response.data && error.response.data.error)?error.response.data.error:"Failed to fetch users books.";
                 dispatch(userFetchBooksError(errorMessage));
-                console.log(error.response);
             });
     }
 }

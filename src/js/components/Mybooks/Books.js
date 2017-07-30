@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { userFetchBooks } from "../../actions";
-import { Segment, Card, Image } from "semantic-ui-react"
+import { Segment, Card, Image, Header } from "semantic-ui-react"
 
 class BookSegment extends Component {
     constructor(props){
@@ -13,12 +13,15 @@ class BookSegment extends Component {
         const books = this.props.fetchedBooks || [];
 
         return(
-            <Segment loading={this.props.fetchBooksLoading}>
-                {(books.length <= 0)
-                    ?<h2>You don't have any books</h2>
-                    :<Books books={books} />
-                }
-            </Segment>
+            <div>
+                <Header as="h2" color="teal">My Books</Header>
+                <Segment loading={this.props.fetchBooksLoading}>
+                    {(books.length <= 0)
+                        ?<h2>You don't have any books</h2>
+                        :<Books books={books} />
+                    }
+                </Segment>
+            </div>
         );
     }
 }

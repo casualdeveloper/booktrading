@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Grid, Segment, Icon, Header, Message, Input, Item, Card, Image, Divider } from "semantic-ui-react"
+import { Button, Grid, Segment, Icon, Header, Message, Input, Item, Card, Image, Divider, Modal } from "semantic-ui-react"
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { searchBooks, addBook, searchBooksSuccess, addBookError, searchBooksError } from "../../actions";
@@ -69,13 +69,16 @@ class SearchResultCards extends Component {
         super(props);
 
         this.state = {
-            activeId: 0
+            activeId: 0,
+            modalOpen: false
         }
 
         this.data = this.props.searchFound;
         this.addBook = this.props.addBook;
         this.submit = this.submit.bind(this);
         this.active = this.active.bind(this);
+        this.handleModalClose = this.handleModalClose.bind(this);
+        this.handleModalOpen = this.handleModalOpen.bind(this);
     }
 
     submit(e){ 
@@ -87,6 +90,19 @@ class SearchResultCards extends Component {
     
     active(activeId){
         this.setState({activeId});
+        this.handleModalOpen();
+    }
+
+    handleModalOpen(e){
+        this.setState({
+           modalOpen: true 
+        });
+    }
+
+    handleModalClose(e){
+        this.setState({
+           modalOpen: false 
+        });
     }
 
     extractBookObj(obj, index=null){
@@ -121,40 +137,35 @@ class SearchResultCards extends Component {
         let activeBook = this.extractBookObj(this.data.items[this.state.activeId]);
         return(
         <div>
-            <Divider />
-            <Button attached="top" onClick={this.props.hide}>Hide</Button>
-            <Divider />
-            <ActiveItem book={activeBook} submit={this.submit} addBookLoading={this.props.addBookLoading}/>
+            <ActiveItemModal modalOpen={this.state.modalOpen} closeModal={this.handleModalClose} book={activeBook} submit={this.submit} addBookLoading={this.props.addBookLoading}/>
             <Divider />
             <Card.Group itemsPerRow={3} stackable doubling>
                 {this.data.items.map((obj,index) => {
                     return <SearchResultCard active={this.active} key={index} {...this.extractBookObj(obj,index)}  />    
                 })}
             </Card.Group>
-            <Divider />
-            <Button attached="bottom" onClick={this.props.hide}>Hide</Button>
         </div>
         );
     }
 }
 
-const ActiveItem = ({ book, submit, addBookLoading }) => {
+const ActiveItemModal = ({book, submit, addBookLoading, modalOpen, closeModal}) => {
     return(
-        <Item>
-            <Item.Image size="medium" src={book.image} />
-
-            <Item.Content>
-                <Item.Header>{book.title}</Item.Header>
-                <Item.Meta>By - {book.authors}</Item.Meta>
-                <Item.Description>
+        <Modal open={modalOpen} onClose={closeModal}>
+            <Modal.Header>Book</Modal.Header>
+            <Modal.Content image scrolling>
+                {book.image?<Image size="medium" src={book.image} />:null}
+                <Modal.Description>
+                    <Header>{book.title}</Header>
                     <p>{book.description}</p>
-                </Item.Description>
-                <Item.Extra>
-                    <Button fluid positive onClick={submit} loading={addBookLoading}>Add</Button>
-                </Item.Extra>
-            </Item.Content>
-        </Item>
-    );
+                </Modal.Description>
+            </Modal.Content>
+            <Modal.Actions>
+                 <Button onClick={closeModal}>Close</Button>
+                 <Button positive onClick={submit} loading={addBookLoading}>Add</Button>
+            </Modal.Actions>
+        </Modal>
+    )
 }
 
 const SearchResultCard = ({ image, title, index, active }) => {
