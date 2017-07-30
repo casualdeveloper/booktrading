@@ -9,14 +9,15 @@ import {
 } from "../types";
 
 import axios from "axios";
-import {authPost, userAddBook} from "../user";
+import {userAddBook} from "../user";
 import * as localData from "../../localData/userLocalData";
+import { authCall } from "../../authCalls";
 
 export const searchBooks = (search) => {
     return (dispatch) => {
         dispatch(searchBooksLoading(true));
         dispatch({ type: BOOK_SEARCH, payload: search.search });
-        authPost.post("/api/books/search", search)
+        authCall.post("/api/books/search", search)
             .then(response => {
                 dispatch(searchBooksLoading(false));
                 dispatch(searchBooksSuccess(response.data));
@@ -44,7 +45,7 @@ export const searchBooksError = (data) => {
 export const addBook = (book) => {
     return (dispatch) => {
         dispatch(addBookLoading(true));
-        authPost.post("/api/books/addBook", {book: book})
+        authCall.post("/api/books/addBook", {book: book})
             .then(response => {
                 dispatch(addBookLoading(false));
                 dispatch(addBookSuccess(response.data.book));

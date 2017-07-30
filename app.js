@@ -34,9 +34,7 @@ app.use(routes);
 
 app.use(function(err, req, res, next) {
     res.status(err.status || 500);
-    res.json({"error": {
-        message: err.message,
-    }});
+    res.json({"error": err.message});
 });
 
 app.listen(app.get("port"), err => {

@@ -7,15 +7,16 @@ import {
     USER_CHANGE_PASSWORD_SUCCESS
 } from "../types";
 import axios from "axios";
-import {authPost, userLoginSuccess} from "./auth-actions";
+import {userLoginSuccess} from "./auth-actions";
 import * as localData from "../../localData/userLocalData";
+import { authCall } from "../../authCalls";
 
 //update profile
 export const updateProfile = (data) => {
     return (dispatch) => {
         dispatch(updateProfileLoading(true));
 
-        authPost
+        authCall
             .post("/api/user/updateProfile", data)
             .then(response => {
                 dispatch(updateProfileLoading(false));
@@ -47,7 +48,7 @@ export const changePassword = (data) => {
     const {newPassword, currentPassword} = data;
     return (dispatch) => {
         dispatch(changePasswordLoading(true));
-        authPost
+        authCall
             .post("/api/user/changepassword", {newPassword, currentPassword})
             .then(response => {
                 dispatch(changePasswordLoading(false));

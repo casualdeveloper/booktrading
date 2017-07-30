@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt-nodejs");
+const Schema = mongoose.Schema;
 
 const SALT_FACTOR = 10;
 
@@ -20,7 +21,7 @@ const userSchema = mongoose.Schema({
         },
         city: { type: String }
     },
-    books: []
+    books: [{ type: Schema.ObjectId, ref: "Book" }]
 });
 
 userSchema.methods.name = function() {

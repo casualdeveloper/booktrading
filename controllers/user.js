@@ -82,3 +82,10 @@ exports.addBook = function(req,res,next){
 
     });
 }
+
+exports.fetchBooks = function(req, res, next){ 
+    User.findById(req.user.id).populate("books").exec(function(err, results){
+        if(err) { return next(err) }
+        res.status(200).json({books: results.books});
+    });
+}

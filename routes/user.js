@@ -8,5 +8,6 @@ router.post("/changepassword", authController.JWTVerify, userController.changePa
     res.status(200).json({message:"Password changed successfully!"});
 });
 router.post("/checkformatch", userController.checkForMatch);
+router.get("/fetchbooks", authController.JWTVerify, userController.fetchBooks);
 
 module.exports = router;

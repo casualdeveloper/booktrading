@@ -30,7 +30,7 @@ exports.addBook = function(req,res,next){
         authors: reqBook.authors,
         title: reqBook.title,
         description: reqBook.description,
-        owner: req.user.id
+        _owner: req.user.id
     });
     newBook.save(function(err, book){
         if(err) next(err);

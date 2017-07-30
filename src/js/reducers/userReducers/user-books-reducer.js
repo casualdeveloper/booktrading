@@ -6,3 +6,24 @@ export function userAddBook(state, action) {
         books: newBookList
     }
 }
+
+export function userFetchBooks(state, action) {
+    return {
+        ...state,
+        fetchedBooks: action.payload
+    }
+}
+
+export function userFetchBooksLoading(state, action) {
+    return {
+        ...state,
+        fetchBooksLoading: action.payload
+    }
+}
+
+export function userFetchBooksError(state, action) {
+    return {
+        ...state,
+        fetchBooksError: action.payload
+    }
+}

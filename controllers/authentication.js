@@ -133,8 +133,8 @@ exports.register = function(req, res, next) {
 exports.JWTLogin = function(req,res,next){
     passport.authenticate("jwt", function(err,user,info){
         if(err || info) {
-            //if(!err)
-            //    return next(info);
+            if(!err)
+                err = new Error(info);
             return next(err);
         }
         if(!user) { return res.status(401) }
@@ -151,8 +151,8 @@ exports.JWTVerify = function(req,res,next){
     passport.authenticate("jwtVerify", function(err,userId,info){
         if(err || info) {
             if(!err)
-                err.message = info;
-            //console.log(err || info);
+                err = new Error(info);
+    
             console.log("err",err);
             return next(err);
         }
