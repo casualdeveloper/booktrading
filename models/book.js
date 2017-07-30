@@ -5,7 +5,7 @@ const bookSchema = mongoose.Schema({
     image: { type: String, required: true },
     title: { type: String, required: true },
     description: {type: String, required: true},
-    authors: [],
+    authors: {type: String, required: true, default: "" },
     _owner: { type: Schema.ObjectId, required: true, ref: "User" },
     date: { type: Date, default: Date.now }
 });

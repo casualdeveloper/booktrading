@@ -108,13 +108,8 @@ class SearchResultCards extends Component {
     extractBookObj(obj, index=null){
         let book = obj.volumeInfo;
         let authors = null;
-        if(book.authors){
+        if(book.authors && book.authors.length !== 0){
             authors = book.authors.join(", ");
-            // replace last "," with "."
-            let tempAuthors = authors.split("");
-            tempAuthors.splice(tempAuthors.length-2, 2, ".");
-
-            authors = tempAuthors.join("");
         }
         let image = "http://via.placeholder.com/300x450?text=No+Image";
         if(book.imageLinks){
@@ -152,11 +147,15 @@ class SearchResultCards extends Component {
 const ActiveItemModal = ({book, submit, addBookLoading, modalOpen, closeModal}) => {
     return(
         <Modal open={modalOpen} onClose={closeModal}>
-            <Modal.Header>Book</Modal.Header>
+            <Modal.Header>About book</Modal.Header>
             <Modal.Content image scrolling>
                 {book.image?<Image size="medium" src={book.image} />:null}
                 <Modal.Description>
                     <Header>{book.title}</Header>
+                    <p className="inline-text">
+                        <h4>Authors: </h4>
+                        {book.authors}
+                    </p>
                     <p>{book.description}</p>
                 </Modal.Description>
             </Modal.Content>
