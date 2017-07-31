@@ -1,6 +1,7 @@
 const axios = require("axios");
 const API_KEY = require("../config").API_KEY;
 const Book = require("../models/book");
+const mongoose = require("mongoose");
 
 //https://www.googleapis.com/books/v1/volumes?q=1984&key=AIzaSyDOEQ7jK9lFbTk7sYQ63XFR6ajCaOZBvKA&fields=items(volumeInfo/title,volumeInfo/description,volumeInfo/authors,volumeInfo/imageLinks/thumbnail)&printType=books
 
@@ -36,5 +37,21 @@ exports.addBook = function(req,res,next){
         if(err) next(err);
         req.book = book;
         next();
+    });
+}
+
+exports.fetchBooks = function(req, res, next){
+    const pageSize = 20;
+    let lastBook = req.body.lastBook;
+    let books;
+    let queryFindParams = {};
+    if(lastBook){
+        let oid = mongoose.Types.ObjectId(lastBook);
+        queryFindParams = {_id: {$gt: oid}};
+    }
+
+    Book.find(queryFindParams).limit(pageSize).exec(function(err, results){
+        if(err){ return next(err) }
+        res.status(200).json({books: results});
     });
 }

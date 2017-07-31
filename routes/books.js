@@ -6,6 +6,7 @@ const userController = require("../controllers/user");
 
 router.post("/search", authController.JWTLogin, bookController.searchForBooks);
 router.post("/addBook", authController.JWTLogin, bookController.addBook, userController.addBook);
+router.post("/fetch", bookController.fetchBooks);
 
 
 module.exports = router;

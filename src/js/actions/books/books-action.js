@@ -5,7 +5,10 @@ import {
     BOOK_SEARCH_SUCCESS,
     BOOK_ADD_BOOK,
     BOOK_ADD_BOOK_LOADING,
-    BOOK_ADD_BOOK_ERROR
+    BOOK_ADD_BOOK_ERROR,
+    BOOK_FETCH_BOOKS,
+    BOOK_FETCH_BOOKS_ERROR,
+    BOOK_FETCH_BOOKS_LOADING
 } from "../types";
 
 import axios from "axios";
@@ -71,4 +74,39 @@ export const addBookError = (error) => {
 
 export const addBookLoading = (bool) => {
     return { type: BOOK_ADD_BOOK_LOADING, payload: bool }
+}
+
+export const fetchBooks = (lastBook) => {
+    return dispatch => {
+        dispatch(fetchBooksLoading(true));
+        if(!lastBook)
+            lastBook = null;
+        authCall.post("/api/books/fetch", { lastBook: lastBook } )
+            .then(response => {
+                let books = response.data.books;
+                if(books.length > 0)
+                    lastBook = books[books.length - 1]._id;
+                dispatch(fetchBooksSuccess(books, lastBook))
+                dispatch(fetchBooksLoading(false));
+            })
+            .catch(error => {
+                let errorMessage = ( error.response && error.response.data && error.response.data.error )
+                    ?error.response.data.error
+                    :"Couldn't fetch books, try again later.";
+                dispatch(fetchBooksError(errorMessage));
+                dispatch(fetchBooksLoading(false));
+            });
+    }
+}
+
+export const fetchBooksLoading = (bool) => {
+    return { type: BOOK_FETCH_BOOKS_LOADING, payload: bool }
+}
+
+export const fetchBooksError = (error) => {
+    return { type: BOOK_FETCH_BOOKS_ERROR, payload: error }
+}
+
+export const fetchBooksSuccess = (books, lastBook) => {
+    return { type: BOOK_FETCH_BOOKS, payload: books, lastBook }
 }
