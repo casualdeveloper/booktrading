@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Button, Grid, Segment, Icon, Header, Message, Input, Item, Card, Image, Divider, Modal } from "semantic-ui-react"
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { searchBooks, addBook, searchBooksSuccess, addBookError, searchBooksError } from "../../actions";
+import { searchBooks, addBook, searchBooksSuccess, userAddBookError, searchBooksError } from "../../actions";
 import LazyImage from "../LazyImage";
 
 class SearchSegment extends Component {
@@ -182,13 +182,13 @@ function mapStateToProps(state){
         searchLoading: state.books.bookSearchLoading,
         searchError: state.books.bookSearchError,
         searchFound: state.books.bookSearchResults,
-        addBookLoading: state.books.bookAddLoading,
-        addBookError: state.books.bookAddError
+        addBookLoading: state.user.bookAddLoading,
+        addBookError: state.user.bookAddError
     }
 }
 
 function mapDispatchToProps(dispatch){
-    return bindActionCreators({searchBooks, addBook, searchSetResults: searchBooksSuccess, setAddBookError: addBookError, setSearchBooksError: searchBooksError }, dispatch);
+    return bindActionCreators({searchBooks, addBook, searchSetResults: searchBooksSuccess, setAddBookError: userAddBookError, setSearchBooksError: searchBooksError }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(SearchSegment);

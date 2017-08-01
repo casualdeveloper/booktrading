@@ -13,6 +13,8 @@ import {
     USER_CHANGE_PASSWORD_LOADING,
     USER_CHANGE_PASSWORD_SUCCESS,
     USER_ADD_BOOK,
+    USER_ADD_BOOK_ERROR,
+    USER_ADD_BOOK_LOADING,
     USER_FETCH_BOOKS,
     USER_FETCH_BOOKS_ERROR,
     USER_FETCH_BOOKS_LOADING
@@ -38,6 +40,8 @@ export function userReducer(state = {fetchingData: true, fetchedBooks: []}, acti
         case USER_CHANGE_PASSWORD_LOADING: return ( user.userChangePasswordLoading(state,action) );
         case USER_CHANGE_PASSWORD_SUCCESS: return ( user.userChangePasswordSuccess(state,action) );
         case USER_ADD_BOOK: return ( userBooks.userAddBook(state,action) );
+        case USER_ADD_BOOK_ERROR: return ( userBooks.userAddBookError(state,action) );
+        case USER_ADD_BOOK_LOADING: return ( userBooks.userAddBookLoading(state,action) );
         case USER_FETCH_BOOKS: return ( userBooks.userFetchBooks(state,action) );
         case USER_FETCH_BOOKS_ERROR: return ( userBooks.userFetchBooksError(state,action) );
         case USER_FETCH_BOOKS_LOADING: return ( userBooks.userFetchBooksLoading(state,action) );

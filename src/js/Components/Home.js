@@ -9,10 +9,11 @@ import { fetchBooks, fetchBooksError } from "../actions";
 class Home extends Component{
     constructor(props){
         super(props);
-        this.props.fetchBooks(this.props.lastBook);
+        if(this.props.books && this.props.books.length <= 0)
+            this.props.fetchBooks(this.props.lastBook);
         this.handleLoadMore = this.handleLoadMore.bind(this);
     }
-
+    
     handleLoadMore(){
         this.props.fetchBooks(this.props.lastBook);
     }

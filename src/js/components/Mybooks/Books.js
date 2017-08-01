@@ -8,7 +8,8 @@ import LazyImage from "../LazyImage";
 class BookSegment extends Component {
     constructor(props){
         super(props);
-        this.props.userFetchBooks(this.props.lastBook);
+        if(this.props.fetchedBooks && this.props.fetchedBooks.length <= 0)
+            this.props.userFetchBooks(this.props.lastBook);
         this.handleLoadMore = this.handleLoadMore.bind(this);
     }
 

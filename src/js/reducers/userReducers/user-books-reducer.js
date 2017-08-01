@@ -7,6 +7,20 @@ export function userAddBook(state, action) {
     }
 }
 
+export function userAddBookError(state, action){
+    return {
+        ...state,
+        bookAddError: action.payload
+    }
+}
+
+export function userAddBookLoading(state, action) {
+    return {
+        ...state,
+        bookAddLoading: action.payload
+    }
+}
+
 export function userFetchBooks(state, action) {
     let tempOldBooks = state.fetchedBooks;
     let newBooks = tempOldBooks.concat(action.payload)
