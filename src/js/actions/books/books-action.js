@@ -86,7 +86,8 @@ export const fetchBooks = (lastBook) => {
                 let books = response.data.books;
                 if(books.length > 0)
                     lastBook = books[books.length - 1]._id;
-                dispatch(fetchBooksSuccess(books, lastBook))
+                dispatch(fetchBooksSuccess(books, lastBook));
+                dispatch(fetchBooksError(null));
                 dispatch(fetchBooksLoading(false));
             })
             .catch(error => {

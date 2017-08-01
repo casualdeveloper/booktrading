@@ -1,5 +1,6 @@
 const User = require("../models/user");
 const passport = require("passport");
+const mongoose = require("mongoose");
 
 exports.updateProfile = function (req, res, next) {
     const profileObj = req.body;
@@ -84,8 +85,21 @@ exports.addBook = function(req,res,next){
 }
 
 exports.fetchBooks = function(req, res, next){ 
-    User.findById(req.user.id).populate("books").exec(function(err, results){
-        if(err) { return next(err) }
-        res.status(200).json({books: results.books});
+    const pageSize = 12;
+    let lastBook = req.body.lastBook;
+    let books;
+    let queryFindParams = {};
+    if(lastBook){
+        let oid = mongoose.Types.ObjectId(lastBook);
+        queryFindParams = {_id: {$gt: oid}};
+    }
+
+    User.findById(req.user.id).populate({
+        path: "books",
+        match: queryFindParams,
+        options: { limit: 12 }
+        }).exec(function(err, results){
+            if(err) { return next(err) }
+            res.status(200).json({books: results.books});
     });
 }

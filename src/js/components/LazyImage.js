@@ -49,13 +49,20 @@ export default class LazyImage extends Component {
             </div>
         );
 
-        return(
-            <div>
-                {this.state.imageLoading
-                    ?LoadingComponent
-                    :this.props.children
-                }
-            </div>
-        );
+        if(this.state.imageLoading){
+            return LoadingComponent;
+        }else{
+            return this.props.children;
+        }
+
+
+        // return(
+        //     <div>
+        //         {this.state.imageLoading
+        //             ?LoadingComponent
+        //             :this.props.children
+        //         }
+        //     </div>
+        // );
     }
 }

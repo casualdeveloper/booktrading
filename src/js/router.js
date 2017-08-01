@@ -3,6 +3,7 @@ import { Route, Link, withRouter, Redirect  } from "react-router-dom";
 import { Menu, Container, Dimmer, Loader } from "semantic-ui-react";
 import { connect } from "react-redux";
 import {bindActionCreators} from "redux";
+import { init as LazyImagePreload } from "./components/LazyImage";
 
 import Home from "./components/Home";
 import Login from "./components/Login";
@@ -15,11 +16,15 @@ import { userLogout, userLocalLogin } from "./actions";
 class App extends React.Component {
     constructor(props){
         super(props);
+        this.state = {
+            defaultImagePreloaded: false
+        }
         this.props.userLocalLogin();
+        LazyImagePreload(null, () => { this.setState({ defaultImagePreloaded:true }) });
     }
 
     render(){
-        if(this.props.user.fetchingData){
+        if(this.props.user.fetchingData || !this.state.defaultImagePreloaded){
             return(
                 <Dimmer active>
                     <Loader>Loading</Loader>

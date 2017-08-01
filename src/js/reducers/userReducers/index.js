@@ -22,7 +22,7 @@ import * as user from "./user-reducer";
 import * as auth from "./auth-reducer";
 import * as userBooks from "./user-books-reducer"
 
-export function userReducer(state = {fetchingData: true}, action) {
+export function userReducer(state = {fetchingData: true, fetchedBooks: []}, action) {
     switch(action.type){
         case USER_LOGIN: return ( auth.userLogin(state, action) );
         case USER_LOGOUT: return ( auth.userLogout(state,action) );

@@ -3,6 +3,7 @@ import { Button, Grid, Segment, Icon, Header, Message, Input, Item, Card, Image,
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { searchBooks, addBook, searchBooksSuccess, addBookError, searchBooksError } from "../../actions";
+import LazyImage from "../LazyImage";
 
 class SearchSegment extends Component {
     constructor(props){
@@ -134,7 +135,7 @@ class SearchResultCards extends Component {
         <div>
             <ActiveItemModal modalOpen={this.state.modalOpen} closeModal={this.handleModalClose} book={activeBook} submit={this.submit} addBookLoading={this.props.addBookLoading}/>
             <Divider />
-            <Card.Group itemsPerRow={3} stackable doubling>
+            <Card.Group itemsPerRow={3} doubling>
                 {this.data.items.map((obj,index) => {
                     return <SearchResultCard active={this.active} key={index} {...this.extractBookObj(obj,index)}  />    
                 })}
@@ -146,12 +147,11 @@ class SearchResultCards extends Component {
 
 const ActiveItemModal = ({book, submit, addBookLoading, modalOpen, closeModal}) => {
     return(
-        <Modal open={modalOpen} onClose={closeModal}>
-            <Modal.Header>About book</Modal.Header>
+        <Modal open={modalOpen} onClose={closeModal} basic>
+            <Modal.Header>{book.title}</Modal.Header>
             <Modal.Content image scrolling>
                 {book.image?<Image size="medium" src={book.image} />:null}
                 <Modal.Description>
-                    <Header>{book.title}</Header>
                     <p className="inline-text">
                         <h4>Authors: </h4>
                         {book.authors}
@@ -169,11 +169,10 @@ const ActiveItemModal = ({book, submit, addBookLoading, modalOpen, closeModal}) 
 
 const SearchResultCard = ({ image, title, index, active }) => {
     return (
-        <Card link onClick={() => active(index)} >
-            {image?<Image wrapped src={image} />:null}
-            <Card.Content>
-                <Card.Header>{title}</Card.Header>
-            </Card.Content>
+        <Card link onClick={() => active(index)} className="square-card" >
+            <LazyImage image={image}>
+                <Image wrapped src={image} />
+            </LazyImage>
         </Card>
     );
 }

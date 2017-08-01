@@ -7,16 +7,23 @@ export const userAddBook = (bookId) => {
     return { type: USER_ADD_BOOK, payload: bookId }
 }
 
-export const userFetchBooks = () => {
+export const userFetchBooks = (lastBook) => {
     return dispatch => {
         dispatch(userFetchBooksLoading(true));
-        authCall.get("/api/user/fetchbooks")
+        if(!lastBook)
+            lastBook = null;
+        authCall.post("/api/user/fetchbooks", { lastBook: lastBook })
             .then(response => {
+                let books = response.data.books;
+                if(books.length > 0)
+                    lastBook = books[books.length - 1]._id;
                 dispatch(userFetchBooksLoading(false));
                 dispatch(userFetchBooksError(null));
-                dispatch(userFetchBooksSuccess(response.data.books));
+                dispatch(userFetchBooksSuccess(response.data.books, lastBook));
             })
             .catch(error => {
+                console.log(error);
+                console.log(error.response);
                 dispatch(userFetchBooksLoading(false));
                 let errorMessage = (error.response && error.response.data && error.response.data.error)?error.response.data.error:"Failed to fetch users books.";
                 dispatch(userFetchBooksError(errorMessage));
@@ -32,6 +39,6 @@ export const userFetchBooksError = (error) => {
     return { type: USER_FETCH_BOOKS_ERROR, payload: error }
 }
 
-export const userFetchBooksSuccess = (data) => {
-    return { type: USER_FETCH_BOOKS, payload: data }
+export const userFetchBooksSuccess = (data, lastBook) => {
+    return { type: USER_FETCH_BOOKS, payload: data, lastBook }
 }

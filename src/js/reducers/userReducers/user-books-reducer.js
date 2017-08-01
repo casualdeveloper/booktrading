@@ -8,9 +8,12 @@ export function userAddBook(state, action) {
 }
 
 export function userFetchBooks(state, action) {
+    let tempOldBooks = state.fetchedBooks;
+    let newBooks = tempOldBooks.concat(action.payload)
     return {
         ...state,
-        fetchedBooks: action.payload
+        fetchedBooks: newBooks,
+        lastBook: action.lastBook
     }
 }
 
