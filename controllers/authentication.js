@@ -20,7 +20,8 @@ function setUserInfo(user) {
         city: user.profile.city,
         email: user.email,
         username: user.username,
-        books: user.books
+        books: user.books,
+        id: user._id
     }
 };
 

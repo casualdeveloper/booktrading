@@ -4,9 +4,9 @@ import { Segment, Icon, Header, Message, Button, Grid, Card, Image, Loader, Dimm
 import LazyImage from "./LazyImage";
 import DefaultBookCover from "./DefaultBookCover";
 import { bindActionCreators } from "redux";
-import { fetchBooks, fetchBooksError } from "../actions";
+import { fetchBooks, fetchBooksError, userNewTrade, userNewTradeError, userNewTradeSuccess } from "../actions";
 
-class Home extends Component{
+class Home extends Component {
     constructor(props){
         super(props);
         if(this.props.books && this.props.books.length <= 0)
@@ -34,7 +34,7 @@ class Home extends Component{
                                 {this.props.booksError}
                             </Message.Content>
                         </Message>
-                        <Books books={this.props.books} />
+                        <Books books={this.props.books} {...this.props} />
                         <br />
                         <Button primary onClick={this.handleLoadMore} loading={loadMoreLoad}>Load More</Button>
                     </Grid.Column>
@@ -64,6 +64,13 @@ class Books extends Component {
 
     handleModalClose(){
         this.setState({modalOpen: false});
+
+        //delete trade errors if there were any;
+        if(this.props.newTradeError)
+            this.props.userNewTradeError(null);
+        //delete trade success message if there is one;
+        if(this.props.newTradeSuccess)
+            this.props.userNewTradeSuccess(null);
     }
 
     setActiveBook(book){
@@ -80,7 +87,7 @@ class Books extends Component {
                         return <Book book={obj} key={index} setActiveBook={this.setActiveBook} openModal={this.handleModalOpen}  />    
                     })}
                 </Card.Group>
-                <BookModal book={this.state.activeBook} modalOpen={this.state.modalOpen} closeModal={this.handleModalClose}  />
+                <BookModal book={this.state.activeBook} modalOpen={this.state.modalOpen} closeModal={this.handleModalClose} {...this.props}  />
             </div>
         )
     }
@@ -104,7 +111,11 @@ class Book extends Component {
 }
 
 
-const BookModal = ({book, modalOpen, closeModal}) => {
+const BookModal = ({book, modalOpen, closeModal, userIsAuth, userId, userNewTrade, newTradeLoading, newTradeError, newTradeSuccess}) => {
+    let showTradeButton = false;
+    if(userIsAuth && book._owner !== userId)
+        showTradeButton = true;
+
     return (
         <Modal open={modalOpen} onClose={closeModal} basic>
             <Modal.Header>{book.title}</Modal.Header>
@@ -116,27 +127,49 @@ const BookModal = ({book, modalOpen, closeModal}) => {
                         {book.authors}
                     </p>
                     <p>{book.description}</p>
+                    
                 </Modal.Description>
             </Modal.Content>
             <Modal.Actions>
-                 <Button onClick={closeModal}>Close</Button>
+                {showTradeButton
+                    ?<Button loading={newTradeLoading} color="green" onClick={() => { userNewTrade(book._id) }} >Trade</Button>
+                    :null
+                }
+                <Button onClick={closeModal}>Close</Button>
             </Modal.Actions>
+            <Message error hidden={!newTradeError}>
+                <Message.Content>
+                    <Message.Header>Failed to request trade</Message.Header>
+                    {newTradeError}
+                </Message.Content>
+            </Message>
+            <Message positive hidden={!newTradeSuccess}>
+                <Message.Content>
+                    <Message.Header>Failed to request trade</Message.Header>
+                    {newTradeSuccess}
+                </Message.Content>
+            </Message>
         </Modal>
     )
 }
 
 
-function mapStateToProps(state){
+function mapStateToProps(state) {
     return {
+        userIsAuth: state.user.isAuth,
+        userId: state.user.id,
         books: state.books.books,
         booksLoading: state.books.booksFetchLoading,
         booksError: state.books.booksFetchError,
-        lastBook: state.books.lastBook
+        lastBook: state.books.lastBook,
+        newTradeError: state.user.newTradeError,
+        newTradeLoading: state.user.newTradeLoading,
+        newTradeSuccess: state.user.newTradeSuccess
     }
 }
 
 function mapDispatchToProps(dispatch){
-    return bindActionCreators({fetchBooks, fetchBooksError}, dispatch);
+    return bindActionCreators({fetchBooks, fetchBooksError, userNewTrade, userNewTradeError, userNewTradeSuccess}, dispatch);
 }
 
 

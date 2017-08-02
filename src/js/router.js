@@ -10,6 +10,7 @@ import Login from "./components/Login";
 import Signup from "./components/Signup";
 import Settings from "./components/Settings";
 import Mybooks from "./components/Mybooks";
+import Trades from "./components/Trades";
 
 import { userLogout, userLocalLogin } from "./actions";
 
@@ -48,6 +49,7 @@ class App extends React.Component {
         const UserProfileSubmenu = (
             <Menu.Menu position="right">
                 <Menu.Item as={Link} to="/mybooks" content="My Books" active={pathname === "mybooks"} />
+                <Menu.Item as={Link} to="/trades" content="Trades" active={pathname === "trades"} />
                 <Menu.Item as={Link} to="/settings" content="Settings" active={pathname === "settings"} />
                 <Menu.Item content="Logout" onClick={()=>{this.props.userLogout()}} />
             </Menu.Menu>
@@ -67,6 +69,7 @@ class App extends React.Component {
                 <PrivateRoute path="/settings/:activeTab" component={Settings} {...this.props} />
                 <PrivateRoute exact path="/mybooks" component={Mybooks} {...this.props} />
                 <PrivateRoute path="/mybooks/:activeTab" component={Mybooks} {...this.props} />
+                <PrivateRoute path="/trades" component={Trades} {...this.props} />
                    
             </Container>
         );

@@ -21,7 +21,7 @@ const userSchema = mongoose.Schema({
         },
         city: { type: String }
     },
-    books: [{ type: Schema.ObjectId, ref: "Book" }]
+    books: [{ type: Schema.ObjectId, ref: "Book" }],
 });
 
 userSchema.methods.name = function() {
