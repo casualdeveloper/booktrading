@@ -25,7 +25,9 @@ const userSchema = mongoose.Schema({
 });
 
 userSchema.methods.name = function() {
-    return this.displayName || this.username;
+    if(this.profile.firstName && this.profile.lastName)
+        return this.profile.firstName + " " + this.profile.lastName;
+    return this.username;
 };
 
 const noop = function() {};

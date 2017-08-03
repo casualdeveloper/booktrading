@@ -18,9 +18,15 @@ import {
     USER_FETCH_BOOKS,
     USER_FETCH_BOOKS_ERROR,
     USER_FETCH_BOOKS_LOADING,
-    USER_NEW_TRADE,
-    USER_NEW_TRADE_ERROR,
-    USER_NEW_TRADE_LOADING
+    USER_TRADE_NEW,
+    USER_TRADE_NEW_ERROR,
+    USER_TRADE_NEW_LOADING,
+    USER_TRADES_FETCH,
+    USER_TRADES_FETCH_LOADING,
+    USER_TRADE_CANCEL,
+    USER_TRADE_CHANGE_STATUS,
+    USER_TRADES_ERROR,
+    USER_TRADE_LOADING
 } from "../../actions/types";
 
 import * as user from "./user-reducer";
@@ -28,7 +34,14 @@ import * as auth from "./auth-reducer";
 import * as userBooks from "./user-books-reducer"
 import * as trade from "./trade-reducer";
 
-export function userReducer(state = {fetchingData: true, fetchedBooks: []}, action) {
+const defaultState = {
+    fetchingData: true,
+    fetchedBooks: [],
+    trades: [],
+    tradeLoading: []
+}
+
+export function userReducer(state = defaultState, action) {
     switch(action.type){
         case USER_LOGIN: return ( auth.userLogin(state, action) );
         case USER_LOGOUT: return ( auth.userLogout(state,action) );
@@ -49,9 +62,15 @@ export function userReducer(state = {fetchingData: true, fetchedBooks: []}, acti
         case USER_FETCH_BOOKS: return ( userBooks.userFetchBooks(state,action) );
         case USER_FETCH_BOOKS_ERROR: return ( userBooks.userFetchBooksError(state,action) );
         case USER_FETCH_BOOKS_LOADING: return ( userBooks.userFetchBooksLoading(state,action) );
-        case USER_NEW_TRADE: return ( trade.userNewTrade(state,action) );
-        case USER_NEW_TRADE_ERROR: return ( trade.userNewTradeError(state,action) );
-        case USER_NEW_TRADE_LOADING: return ( trade.userNewTradeLoading(state,action) );
+        case USER_TRADE_NEW: return ( trade.userNewTrade(state,action) );
+        case USER_TRADE_NEW_ERROR: return ( trade.userNewTradeError(state,action) );
+        case USER_TRADE_NEW_LOADING: return ( trade.userNewTradeLoading(state,action) );
+        case USER_TRADES_ERROR: return ( trade.userFetchTradesError(state,action) );
+        case USER_TRADE_LOADING: return ( trade.userTradeLoading(state,action) );
+        case USER_TRADES_FETCH: return ( trade.userFetchTrades(state,action) );
+        case USER_TRADES_FETCH_LOADING: return ( trade.userFetchTradesLoading(state,action) );
+        case USER_TRADE_CHANGE_STATUS: return ( trade.userChangeTradeStatus(state,action) );
+        case USER_TRADE_CANCEL: return ( trade.userTradeCancel(state,action) );
         default: return state;
     }
 }

@@ -3,7 +3,6 @@ const API_KEY = require("../config").API_KEY;
 const Book = require("../models/book");
 const mongoose = require("mongoose");
 
-//https://www.googleapis.com/books/v1/volumes?q=1984&key=AIzaSyDOEQ7jK9lFbTk7sYQ63XFR6ajCaOZBvKA&fields=items(volumeInfo/title,volumeInfo/description,volumeInfo/authors,volumeInfo/imageLinks/thumbnail)&printType=books
 
 exports.searchForBooks = function(req,res,next){
     axios.get("https://www.googleapis.com/books/v1/volumes", {

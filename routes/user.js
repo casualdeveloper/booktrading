@@ -13,7 +13,9 @@ router.post("/checkformatch", userController.checkForMatch);
 
 router.post("/fetchbooks", authController.JWTVerify, userController.fetchBooks);
 
-router.post("/trades", authController.JWTLogin);
+router.get("/trades", authController.JWTLogin, tradeController.fetchUserTrades);
 router.post("/addTrade", authController.JWTLogin, tradeController.addTrade);
+router.post("/tradeChangeState", authController.JWTLogin, tradeController.changeTradeState);
+router.post("/deleteTrade", authController.JWTLogin, tradeController.deleteTrade);
 
 module.exports = router;

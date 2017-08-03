@@ -8,7 +8,10 @@ export function userLogin(state, action) {
 }
 
 export function userLogout(state, action){
-    return {isAuth: false};
+    return {
+        ...state,
+        isAuth: false
+    };
 }
 
 export function userLoginLoading(state, action) {

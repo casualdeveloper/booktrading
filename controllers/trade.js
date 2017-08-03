@@ -37,19 +37,60 @@ exports.addTrade = function(req, res, next){
     });
 }
 
-exports.approveTrade = function(req, res, next){
-    res.status(200).json({});
+exports.changeTradeState = function(req, res, next){
+    let tradeId = req.body.tradeId;
+    let status = req.body.status;
+    if(!status || typeof status !== "string"){
+        return res.status(422).json({error: "Invalid trade status"});
+    }
+    if(!tradeId || typeof tradeId !== "string"){
+        return res.status(422).json({error: "Invalid trade id"});
+    }
+
+    Trade.findById(tradeId, function(err,tradeDoc){
+        if(err) return next(err);
+        if(!tradeDoc){
+            return res.status(422).json({error: "Trade request not found!"});
+        }
+        if(!tradeDoc.receiver.equals(req.user._id)){
+            return res.status(422).json({error: "Unauthorized"});
+        }
+        tradeDoc.status = status;
+        tradeDoc.save(function(err, newTradeDoc){
+            if(err) return next(err);
+
+            res.status(200).json({trade: newTradeDoc});
+        });
+
+    });
 }
 
-exports.declineTrade = function(req, res, next){
-    res.status(200).json({});
-}
 
-exports.cancelTrade = function(req, res, next){
-    res.status(200).json({});
+exports.deleteTrade = function(req, res, next){
+    let tradeId = req.body.tradeId;
+    if(!tradeId)
+        return res.status(422).json({error: "Invalid trade id"});
+
+    Trade.findByIdAndRemove(tradeId, function(err){
+        if(err) return next(err);
+        return res.status(200).json({tradeId});
+    });
+    
 }
 
 exports.fetchUserTrades = function(req, res, next){
-    res.status(200).json({});
+    let userId = req.user._id;
+
+    Trade.find({ $or: [ { sender: userId }, { receiver: userId } ] })
+    .populate({ path: "book", select: "title" })
+    .populate({ path: "receiver", select: "username" })
+    .populate({ path: "sender", select: "username" })
+    .exec(function(err, tradeDoc){
+        if(err) return next(err);
+
+        res.status(200).json({trades: tradeDoc});
+
+    });
+
 }
 

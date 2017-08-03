@@ -1,0 +1,2 @@
+export const TRADE_APPROVED = "APPROVED";
+export const TRADE_DECLINED = "DECLINED";
