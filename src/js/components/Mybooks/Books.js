@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { userFetchBooks, userFetchBooksError } from "../../actions";
+import { userFetchBooks, userFetchBooksError, userDeleteBook, userDeleteBookError } from "../../actions";
 import { Segment, Card, Image, Header, Modal, Button, Message } from "semantic-ui-react";
 import LazyImage from "../LazyImage";
 
@@ -34,7 +34,7 @@ class BookSegment extends Component {
                 <Segment>
                     {(this.props.fetchedBooks.length <= 0)
                         ?<h2>You don't have any books</h2>
-                        :<Books books={this.props.fetchedBooks} />
+                        :<Books {...this.props} books={this.props.fetchedBooks} />
                     }
                     <br />
                     <Button primary onClick={this.handleLoadMore} loading={loadMoreLoad}>Load More</Button>
@@ -64,6 +64,7 @@ class Books extends Component {
 
     handleModalClose(){
         this.setState({modalOpen: false});
+        this.props.userDeleteBookError(null);
     }
 
     setActiveBook(book){
@@ -78,7 +79,7 @@ class Books extends Component {
                         return <Book book={obj} key={index} setActiveBook={this.setActiveBook} openModal={this.handleModalOpen} />    
                     })}
                 </Card.Group>
-                <BookModal book={this.state.activeBook} modalOpen={this.state.modalOpen} closeModal={this.handleModalClose}  />
+                <BookModal {...this.props} book={this.state.activeBook} modalOpen={this.state.modalOpen} closeModal={this.handleModalClose}  />
             </div>
         )
     }
@@ -102,7 +103,7 @@ class Book extends Component {
 }
 
 
-const BookModal = ({book, modalOpen, closeModal}) => {
+const BookModal = ({book, modalOpen, closeModal, deleteBookError, deleteBookLoading, userDeleteBook}) => {
     return (
         <Modal open={modalOpen} onClose={closeModal} basic>
             <Modal.Header>{book.title}</Modal.Header>
@@ -117,8 +118,15 @@ const BookModal = ({book, modalOpen, closeModal}) => {
                 </Modal.Description>
             </Modal.Content>
             <Modal.Actions>
-                 <Button onClick={closeModal}>Close</Button>
+                <Button color="red" loading={deleteBookLoading} onClick={() => { userDeleteBook(book._id) }}>Delete</Button>
+                <Button onClick={closeModal}>Close</Button>
             </Modal.Actions>
+            <Message error hidden={!deleteBookError}>
+                <Message.Content>
+                    <Message.Header>Failed to request trade</Message.Header>
+                    {deleteBookError}
+                </Message.Content>
+            </Message>
         </Modal>
     )
 }
@@ -129,12 +137,14 @@ function mapStateToProps(state){
         fetchBooksLoading: state.user.fetchBooksLoading,
         fetchBooksError: state.user.fetchBooksError,
         fetchedBooks: state.user.fetchedBooks,
-        lastBook: state.user.lastBook
+        lastBook: state.user.lastBook,
+        deleteBookLoading: state.user.deleteBookLoading,
+        deleteBookError: state.user.deleteBookError
     }
 }
 
 function mapDispatchToProps(dispatch){
-    return bindActionCreators({ userFetchBooks, userFetchBooksError }, dispatch);
+    return bindActionCreators({ userFetchBooks, userFetchBooksError, userDeleteBook, userDeleteBookError }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(BookSegment);

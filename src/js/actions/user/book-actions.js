@@ -1,7 +1,17 @@
-import { USER_ADD_BOOK, USER_ADD_BOOK_ERROR, USER_ADD_BOOK_LOADING, USER_FETCH_BOOKS, USER_FETCH_BOOKS_ERROR, USER_FETCH_BOOKS_LOADING } from "../types";
+import {
+    USER_ADD_BOOK,
+    USER_ADD_BOOK_ERROR,
+    USER_ADD_BOOK_LOADING,
+    USER_BOOK_DELETE,
+    USER_BOOK_DELETE_ERROR,
+    USER_BOOK_DELETE_LOADING,
+    USER_FETCH_BOOKS,
+    USER_FETCH_BOOKS_ERROR,
+    USER_FETCH_BOOKS_LOADING
+} from "../types";
 import axios from "axios";
 import * as localData from "../../localData/userLocalData";
-import { authCall } from "../../authCalls";
+import { authCall, errorGen } from "../../authCalls";
 
 export const addBook = (book) => {
     return (dispatch) => {
@@ -15,7 +25,7 @@ export const addBook = (book) => {
             .catch(error => {
                 dispatch(userAddBookLoading(false));
                 let defaultError = "Failed to add book";
-                let errorMessage = (error.response && error.response.data && error.response.data.error )?error.response.data.error:defaultError;
+                let errorMessage = errorGen(error, defaultError);
                 dispatch(userAddBookError(errorMessage));
             });
         
@@ -34,6 +44,37 @@ export const userAddBook = (bookId) => {
     return { type: USER_ADD_BOOK, payload: bookId }
 }
 
+export const userDeleteBook = (bookId) => {
+    if(!bookId)
+        return;
+    return dispatch => {
+        dispatch(userDeleteBookLoading(true));
+        authCall.post("/api/books/deleteBook", {bookId: bookId})
+            .then(response => {
+                dispatch(userDeleteBookLoading(false));
+                dispatch(userDeleteBookError(null));
+                dispatch(userDeleteBookSuccess(response.data.bookId));
+            })
+            .catch(error => {
+                let errorMessage = errorGen(error);
+                dispatch(userDeleteBookLoading(false));
+                dispatch(userDeleteBookError(errorMessage));
+            });
+    }
+}
+
+export const userDeleteBookError = (error) => {
+    return { type: USER_BOOK_DELETE_ERROR, payload: error }
+}
+
+export const userDeleteBookLoading = (bool) => {
+    return { type: USER_BOOK_DELETE_LOADING, payload: bool }
+}
+
+export const userDeleteBookSuccess = (bookId) => {
+    return { type: USER_BOOK_DELETE, payload: bookId }
+}
+
 export const userFetchBooks = (lastBook) => {
     return dispatch => {
         dispatch(userFetchBooksLoading(true));
@@ -50,7 +91,7 @@ export const userFetchBooks = (lastBook) => {
             })
             .catch(error => {
                 dispatch(userFetchBooksLoading(false));
-                let errorMessage = (error.response && error.response.data && error.response.data.error)?error.response.data.error:"Failed to fetch users books.";
+                let errorMessage = errorGen(error, "Failed to fetch users books.")
                 dispatch(userFetchBooksError(errorMessage));
             });
     }

@@ -15,6 +15,9 @@ import {
     USER_ADD_BOOK,
     USER_ADD_BOOK_ERROR,
     USER_ADD_BOOK_LOADING,
+    USER_BOOK_DELETE,
+    USER_BOOK_DELETE_ERROR,
+    USER_BOOK_DELETE_LOADING,
     USER_FETCH_BOOKS,
     USER_FETCH_BOOKS_ERROR,
     USER_FETCH_BOOKS_LOADING,
@@ -34,7 +37,7 @@ import * as auth from "./auth-reducer";
 import * as userBooks from "./user-books-reducer"
 import * as trade from "./trade-reducer";
 
-const defaultState = {
+export const defaultState = {
     fetchingData: true,
     fetchedBooks: [],
     trades: [],
@@ -59,6 +62,9 @@ export function userReducer(state = defaultState, action) {
         case USER_ADD_BOOK: return ( userBooks.userAddBook(state,action) );
         case USER_ADD_BOOK_ERROR: return ( userBooks.userAddBookError(state,action) );
         case USER_ADD_BOOK_LOADING: return ( userBooks.userAddBookLoading(state,action) );
+        case USER_BOOK_DELETE: return ( userBooks.userDeleteBook(state,action) );
+        case USER_BOOK_DELETE_ERROR: return ( userBooks.userDeleteBookError(state,action) );
+        case USER_BOOK_DELETE_LOADING: return ( userBooks.userDeleteBookLoading(state,action) );
         case USER_FETCH_BOOKS: return ( userBooks.userFetchBooks(state,action) );
         case USER_FETCH_BOOKS_ERROR: return ( userBooks.userFetchBooksError(state,action) );
         case USER_FETCH_BOOKS_LOADING: return ( userBooks.userFetchBooksLoading(state,action) );

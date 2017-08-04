@@ -84,6 +84,28 @@ exports.addBook = function(req,res,next){
     });
 }
 
+exports.deleteBook = function(req,res,next){
+    let bookId = req.body.bookId;
+    if(!bookId)
+        return res.status(422).json({error: "Invalid book id!"});
+    User.findById(req.user.id, function(err, userDoc){
+        if(err) return next(err);
+
+        let indexOfBookInUser = userDoc.books.indexOf(bookId);
+        if(indexOfBookInUser === -1)
+            return res.status(422).json({error: "Unauthorized"});
+
+        userDoc.books.splice(indexOfBookInUser,1);
+
+        userDoc.save(function(err){
+            if(err) return next(err);
+
+            return next();
+        });
+
+    });
+}
+
 exports.fetchBooks = function(req, res, next){ 
     const pageSize = 12;
     let lastBook = req.body.lastBook;

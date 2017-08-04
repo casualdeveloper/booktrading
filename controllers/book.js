@@ -1,6 +1,7 @@
 const axios = require("axios");
 const API_KEY = require("../config").API_KEY;
 const Book = require("../models/book");
+const Trade = require("../models/trade");
 const mongoose = require("mongoose");
 
 
@@ -37,6 +38,21 @@ exports.addBook = function(req,res,next){
         req.book = book;
         next();
     });
+}
+
+exports.deleteBook = function(req,res,next){
+    let bookId = req.body.bookId;
+
+    Book.findByIdAndRemove(bookId, function(err){
+        if(err) return next(err);
+
+        Trade.remove({ book: bookId }, function(err){
+            if(err) return next(err);
+
+            return next();
+        });
+    });
+
 }
 
 exports.fetchBooks = function(req, res, next){

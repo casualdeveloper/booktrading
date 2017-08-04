@@ -145,7 +145,7 @@ const BookModal = ({book, modalOpen, closeModal, userIsAuth, userId, userNewTrad
             </Message>
             <Message positive hidden={!newTradeSuccess}>
                 <Message.Content>
-                    <Message.Header>Failed to request trade</Message.Header>
+                    <Message.Header>Trade request sent successfully</Message.Header>
                     {newTradeSuccess}
                 </Message.Content>
             </Message>

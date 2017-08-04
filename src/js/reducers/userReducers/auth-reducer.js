@@ -1,3 +1,4 @@
+import { defaultState } from "./index";
 //Login
 export function userLogin(state, action) {
     return {
@@ -9,7 +10,8 @@ export function userLogin(state, action) {
 
 export function userLogout(state, action){
     return {
-        ...state,
+        ...defaultState,
+        fetchingData: false,
         isAuth: false
     };
 }
