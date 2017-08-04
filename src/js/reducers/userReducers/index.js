@@ -41,7 +41,8 @@ export const defaultState = {
     fetchingData: true,
     fetchedBooks: [],
     trades: [],
-    tradeLoading: []
+    tradeLoading: [],
+    tradeFilters: {},
 }
 
 export function userReducer(state = defaultState, action) {
