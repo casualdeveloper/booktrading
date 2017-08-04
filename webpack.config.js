@@ -39,7 +39,7 @@ module.exports = {
     entry: {
         app:PATHS.app,
     },
-    devtool:"eval",
+    devtool:(process.env.NODE_ENV !== "production")?"eval":false,
     output: {
         filename: (process.env.NODE_ENV === "production") ? "[name].[chunkhash].js" : "[name].js",
         path: PATHS.build
